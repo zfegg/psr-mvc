@@ -36,6 +36,12 @@
             "ZfeggTest\\CallableHandlerDecorator\\" : "test/"
         }
     },
+    "scripts": {
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
     "extra": {
         "laminas": {
             "config-provider": "Zfegg\\CallableHandlerDecorator\\ConfigProvider"
