@@ -1,8 +1,7 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace ZfeggTest\CallableHandlerDecorator\Factory;
 
-use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\TextResponse;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\ServiceManager\ServiceManager;
@@ -12,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class ReflectionFactoryFactoryTest extends TestCase
 {
 
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $refFactory = (new ReflectionFactoryFactory())(new ServiceManager());
 

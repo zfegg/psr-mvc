@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Zfegg\CallableHandlerDecorator;
 
@@ -30,10 +30,11 @@ class ReflectionFactory
      */
     private $separator;
 
-    public function __construct(ContainerInterface $container,
-                                callable $paramNameConverter = null,
-                                string $separator = self::DEFAULT_SEPARATOR)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        callable $paramNameConverter = null,
+        string $separator = self::DEFAULT_SEPARATOR
+    ) {
         $this->container = $container;
         $this->paramNameConverter = $paramNameConverter ?:
             function ($name) {
@@ -42,7 +43,13 @@ class ReflectionFactory
         $this->separator = $separator;
     }
 
-    private function getCallReflector($callback)
+    /**
+     * Get call reflector.
+     *
+     * @return ReflectionFunction|ReflectionMethod
+     * @throws \ReflectionException
+     */
+    private function getCallReflector(callable $callback)
     {
         if (is_object($callback) && ! $callback instanceof Closure) {
             $callback = [$callback, '__invoke'];
@@ -53,6 +60,11 @@ class ReflectionFactory
             : new ReflectionFunction($callback);
     }
 
+    /**
+     * Create param resolver.
+     *
+     * @param mixed $value
+     */
     private function createResolver(string $name, bool $resolved, $value = null): callable
     {
         $name = ($this->paramNameConverter)($name);
@@ -76,8 +88,10 @@ class ReflectionFactory
         $type = $parameter->getType();
         $type = $type instanceof ReflectionNamedType ? $type->getName() : null;
 
-        if ($type === 'array' || $type === null || (is_string($type) && ! class_exists($type) && ! interface_exists($type))) {
-
+        if ($type === 'array' ||
+            $type === null ||
+            (is_string($type) && ! class_exists($type) && ! interface_exists($type))
+        ) {
             if ($parameter->isDefaultValueAvailable()) {
                 return $this->createResolver($parameter->getName(), true, $parameter->getDefaultValue());
             }
@@ -98,6 +112,11 @@ class ReflectionFactory
         return $this->createResolver($parameter->getName(), false);
     }
 
+    /**
+     * Normalize callback.
+     *
+     * @param callable|string $callback
+     */
     private function normalize($callback): callable
     {
         if (is_string($callback) && strpos($callback, $this->separator) !== false) {
@@ -109,6 +128,11 @@ class ReflectionFactory
         return $callback;
     }
 
+    /**
+     * Create CallableHandlerDecorator by callable or action.
+     *
+     * @param callable|string $callback
+     */
     public function create($callback): CallableHandlerDecorator
     {
         $callback = $this->normalize($callback);
@@ -124,7 +148,7 @@ class ReflectionFactory
 
     public function exists(string $action): bool
     {
-        [$class, $method] = explode($this->separator, $action) + [null, null];
+        [$class, $method] = explode($this->separator, $action) + ['', ''];
 
         return method_exists($class, $method) && $this->container->has($class);
     }

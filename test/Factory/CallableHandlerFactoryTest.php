@@ -1,10 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace ZfeggTest\CallableHandlerDecorator\Factory;
 
 use Laminas\ServiceManager\ServiceManager;
 use Zfegg\CallableHandlerDecorator\CallableHandlerDecorator;
-use Zfegg\CallableHandlerDecorator\Factory\CallableHandlerAbstractFactory;
 use Zfegg\CallableHandlerDecorator\Factory\CallableHandlerFactory;
 use PHPUnit\Framework\TestCase;
 use Zfegg\CallableHandlerDecorator\Factory\ReflectionFactoryFactory;
@@ -14,7 +13,7 @@ use ZfeggTest\CallableHandlerDecorator\Foo;
 class CallableHandlerFactoryTest extends TestCase
 {
 
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $container = new ServiceManager([
             'invokables' => [Foo::class],
@@ -27,7 +26,7 @@ class CallableHandlerFactoryTest extends TestCase
         $this->assertInstanceOf(CallableHandlerDecorator::class, $handler);
     }
 
-    public function testInvokeByServiceManager()
+    public function testInvokeByServiceManager(): void
     {
         $container = new ServiceManager([
             'invokables' => [Foo::class],

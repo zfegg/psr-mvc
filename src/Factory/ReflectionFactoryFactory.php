@@ -1,15 +1,13 @@
-<?php
-
+<?php declare(strict_types = 1);
 
 namespace Zfegg\CallableHandlerDecorator\Factory;
-
 
 use Psr\Container\ContainerInterface;
 use Zfegg\CallableHandlerDecorator\ReflectionFactory;
 
 class ReflectionFactoryFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): ReflectionFactory
     {
         return new ReflectionFactory(
             $container,

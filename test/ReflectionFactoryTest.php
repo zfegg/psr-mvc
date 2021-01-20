@@ -1,9 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace ZfeggTest\CallableHandlerDecorator;
 
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Diactoros\Response\TextResponse;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +28,7 @@ class ReflectionFactoryTest extends TestCase
         $this->container = new ServiceManager(['invokables' => [Foo::class, Bar::class]]);
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $factory = new ReflectionFactory(new ServiceManager());
         $this->assertFalse($factory->exists($this->handler));
@@ -39,7 +38,7 @@ class ReflectionFactoryTest extends TestCase
     }
 
 
-    public function createCallableTypes()
+    public function createCallableTypes(): array
     {
         return [
             'anonymous_function' => [
@@ -49,8 +48,7 @@ class ReflectionFactoryTest extends TestCase
                     string $name,
                     array $data,
                     int $id = 123
-                )
-                {
+                ) {
                     return new JsonResponse(['name' => $name, 'data' => $data, 'id' => $id]);
                 }
             ],
@@ -68,7 +66,7 @@ class ReflectionFactoryTest extends TestCase
      * @dataProvider createCallableTypes()
      * @param callable|string $callable
      */
-    public function testCreate($callable)
+    public function testCreate($callable): void
     {
         $factory = new ReflectionFactory($this->container);
         $handler = $factory->create($callable);
@@ -84,7 +82,7 @@ class ReflectionFactoryTest extends TestCase
         $this->assertEquals(['name' => 'test', 'data' => [1,2,3], 'id' => 123], $payload);
     }
 
-    public function testUnresolvedParam()
+    public function testUnresolvedParam(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Coding Standard">
     <!-- Paths to check -->
-    <file>config</file>
     <file>src</file>
     <file>test</file>
 
@@ -36,6 +35,7 @@
     <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing" />
 
     <config name="installed_paths" value="vendor/slevomat/coding-standard/SlevomatCodingStandard"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing" />
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint" >
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification" />
