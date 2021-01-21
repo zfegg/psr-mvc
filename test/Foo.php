@@ -13,8 +13,10 @@ class Foo
         Bar $bar,
         string $name,
         array $data,
+        ?string $nullable,
+        Baz $bazParam,
         int $id = 123
     ): ResponseInterface {
-        return new JsonResponse(['name' => $name, 'data' => $data, 'id' => $id]);
+        return new JsonResponse(['name' => $name, 'data' => $data, 'id' => $id, 'nullable' => null]);
     }
 }

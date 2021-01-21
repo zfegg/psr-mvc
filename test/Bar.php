@@ -12,8 +12,9 @@ class Bar
         ServerRequestInterface $request,
         string $name,
         array $data,
+        ?string $nullable,
         int $id = 123
     ): ResponseInterface {
-        return new JsonResponse(['name' => $name, 'data' => $data, 'id' => $id]);
+        return new JsonResponse(['name' => $name, 'data' => $data, 'id' => $id, 'nullable' => null]);
     }
 }

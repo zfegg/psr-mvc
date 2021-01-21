@@ -7,6 +7,7 @@ use Laminas\Diactoros\ServerRequest;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use TypeError;
 use Zfegg\CallableHandlerDecorator\Exception\InvalidArgumentException;
 use Zfegg\CallableHandlerDecorator\ReflectionFactory;
 
@@ -47,9 +48,10 @@ class ReflectionFactoryTest extends TestCase
                     Bar $bar,
                     string $name,
                     array $data,
+                    ?string $nullable,
                     int $id = 123
                 ) {
-                    return new JsonResponse(['name' => $name, 'data' => $data, 'id' => $id]);
+                    return new JsonResponse(['name' => $name, 'data' => $data, 'id' => $id, 'nullable' => null]);
                 }
             ],
             'class_invoke' => [
@@ -73,18 +75,19 @@ class ReflectionFactoryTest extends TestCase
         $request = new ServerRequest();
         $request = $request->withAttribute('name', 'test');
         $request = $request->withAttribute('data', [1,2,3]);
+        $request = $request->withAttribute(Baz::class, new Baz());
 
         $response = $handler->handle($request);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $payload = $response->getPayload();
 
-        $this->assertEquals(['name' => 'test', 'data' => [1,2,3], 'id' => 123], $payload);
+        $this->assertEquals(['name' => 'test', 'data' => [1,2,3], 'id' => 123, 'nullable' => null], $payload);
     }
 
     public function testUnresolvedParam(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
 
         $factory = new ReflectionFactory($this->container);
         $handler = $factory->create($this->handler);

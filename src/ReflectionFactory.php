@@ -65,21 +65,39 @@ class ReflectionFactory
      *
      * @param mixed $value
      */
-    private function createResolver(string $name, bool $resolved, $value = null): callable
+    private function createResolver(int $resolverType, ReflectionParameter $parameter): callable
     {
-        $name = ($this->paramNameConverter)($name);
-        if ($resolved) {
-            return function (ServerRequestInterface $request) use ($name, $value) {
-                return $request->getAttribute($name, $value);
-            };
-        } else {
-            return function (ServerRequestInterface $request) use ($name) {
-                if ($request->getAttribute($name) === null) {
-                    throw new InvalidArgumentException("Unable to resolve parameter \"$name\"");
-                }
+        $name = ($this->paramNameConverter)($parameter->getName());
+        switch ($resolverType) {
+            case 1:
+                return function (ServerRequestInterface $request) use ($name) {
+                    return $request->getAttribute($name);
+                };
+            case 2:
+                $value = $parameter->getDefaultValue();
+                return function (ServerRequestInterface $request) use ($name, $value) {
+                    return $request->getAttribute($name, $value);
+                };
+            case 3:
+                return function (ServerRequestInterface $request): ServerRequestInterface {
+                    return $request;
+                };
+            case 4:
+                $type = $parameter->getType()->getName();
+                return function (ServerRequestInterface $request) use ($name, $type) {
+                    $value = $request->getAttribute($type, $request->getAttribute($name));
+                    if ($value === null) {
+                        return $this->container->get($type);
+                    }
 
-                return $request->getAttribute($name);
-            };
+                    return $value;
+                };
+            case 5:
+            default:
+                $type = $parameter->getType()->getName();
+                return function (ServerRequestInterface $request) use ($name, $type) {
+                    return $request->getAttribute($type, $request->getAttribute($name));
+                };
         }
     }
 
@@ -93,23 +111,21 @@ class ReflectionFactory
             (is_string($type) && ! class_exists($type) && ! interface_exists($type))
         ) {
             if ($parameter->isDefaultValueAvailable()) {
-                return $this->createResolver($parameter->getName(), true, $parameter->getDefaultValue());
+                return $this->createResolver(2, $parameter);
             }
 
-            return $this->createResolver($parameter->getName(), false);
+            return $this->createResolver(1, $parameter);
         }
 
         if ($type === ServerRequestInterface::class) {
-            return function (ServerRequestInterface $request): ServerRequestInterface {
-                return $request;
-            };
+            return $this->createResolver(3, $parameter);
         }
 
         if ($this->container->has($type)) {
-            return $this->createResolver($parameter->getName(), true, $this->container->get($type));
+            return $this->createResolver(4, $parameter);
         }
 
-        return $this->createResolver($parameter->getName(), false);
+        return $this->createResolver(5, $parameter);
     }
 
     /**
