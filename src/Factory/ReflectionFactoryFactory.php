@@ -3,7 +3,10 @@
 namespace Zfegg\CallableHandlerDecorator\Factory;
 
 use Psr\Container\ContainerInterface;
+use Zfegg\CallableHandlerDecorator\Middleware\Middlewares;
+use Zfegg\CallableHandlerDecorator\Middleware\Serializer;
 use Zfegg\CallableHandlerDecorator\ReflectionFactory;
+use Zfegg\CallableHandlerDecorator\Utils\Word;
 
 class ReflectionFactoryFactory
 {
@@ -11,11 +14,8 @@ class ReflectionFactoryFactory
     {
         return new ReflectionFactory(
             $container,
-            function (string $name): string {
-                return preg_replace_callback('/([A-Z]+)/', function ($word) {
-                    return '_' . strtolower($word[1]);
-                }, $name);
-            }
+            [Word::class, 'tableize'],
+            [$container->get(Middlewares::class)->get(Serializer::class)]
         );
     }
 }

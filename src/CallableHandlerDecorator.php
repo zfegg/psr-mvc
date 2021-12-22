@@ -5,6 +5,7 @@ namespace Zfegg\CallableHandlerDecorator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zfegg\CallableHandlerDecorator\Middleware\MiddlewareInterface;
 
 class CallableHandlerDecorator implements RequestHandlerInterface
 {
@@ -13,22 +14,32 @@ class CallableHandlerDecorator implements RequestHandlerInterface
      */
     private $callback;
 
-    /** @var callable[] */
-    private $paramResolvers;
 
-    public function __construct(callable $callback, array $paramResolvers)
-    {
+    public function __construct(
+        callable $callback,
+
+        /** @var callable[] */
+        private array $paramResolvers,
+
+        /** @var MiddlewareInterface[] */
+        private array $middlewares = []
+    ) {
         $this->callback = $callback;
-        $this->paramResolvers = $paramResolvers;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $params = [];
-        foreach ($this->paramResolvers as $resolver) {
-            $params[] = $resolver($request);
-        }
+        return array_reduce(
+            $this->middlewares,
+            fn(callable $next, MiddlewareInterface $middleware) => fn() => $middleware->process($request, $next),
+            function () use ($request) {
+                $params = [];
+                foreach ($this->paramResolvers as $resolver) {
+                    $params[] = $resolver($request);
+                }
 
-        return call_user_func_array($this->callback, $params);
+                return call_user_func_array($this->callback, $params);
+            }
+        )();
     }
 }

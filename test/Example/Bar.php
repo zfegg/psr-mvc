@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace ZfeggTest\CallableHandlerDecorator;
+namespace ZfeggTest\CallableHandlerDecorator\Example;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

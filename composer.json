@@ -9,9 +9,10 @@
         "reflection"
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": ">=8.0",
         "psr/container": "^1.0",
-        "psr/http-server-handler": "^1.0"
+        "psr/http-server-handler": "^1.0",
+        "mezzio/mezzio-router": "^3.7.0"
     },
     "license": "MIT",
     "authors": [
@@ -24,7 +25,18 @@
         "phpunit/phpunit": "^9.5",
         "slevomat/coding-standard": "^6.4",
         "laminas/laminas-servicemanager": "^3.6",
-        "laminas/laminas-diactoros": "^2.5"
+        "laminas/laminas-diactoros": "^2.5",
+        "doctrine/annotations": "^1.13",
+        "mezzio/mezzio": "^3.6",
+        "zfegg/expressive-test": "^0.6.1",
+        "mezzio/mezzio-fastroute": "^3.3",
+        "laminas/laminas-config-aggregator": "^1.7",
+        "symfony/cache": "^5.3",
+        "symfony/serializer": "^6.0",
+        "willdurand/negotiation": "^3.0"
+    },
+    "suggest": {
+        "doctrine/annotations": "Use annotation required."
     },
     "autoload": {
         "psr-4": {

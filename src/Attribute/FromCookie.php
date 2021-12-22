@@ -1,0 +1,17 @@
+<?php
+
+
+namespace Zfegg\CallableHandlerDecorator\Attribute;
+
+use Attribute;
+
+#[Attribute(Attribute::TARGET_PARAMETER)]
+class FromCookie implements InjectFrom
+{
+    public ?string $name;
+
+    public function __construct(?string $name = null)
+    {
+        $this->name = $name;
+    }
+}
