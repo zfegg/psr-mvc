@@ -242,7 +242,9 @@ class RouteMetadata
 
     private function convertRouteToken(Route $route, array $replacePairs): void
     {
-        $route->name = strtr($route->name, $replacePairs);
+        if ($route->name !== null) {
+            $route->name = strtr($route->name, $replacePairs);
+        }
         $route->path = strtr($route->path, $replacePairs);
     }
 }

@@ -81,7 +81,7 @@ class CallbackHandlerFactory
         int $resolverType,
         ?string $name = null,
         ?string $type = null,
-        ?mixed $default = null
+        mixed $default = null
     ): callable {
         switch ($resolverType) {
             case self::FROM_ATTR:
