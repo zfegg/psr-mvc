@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zfegg\CallableHandlerDecorator;
+namespace Zfegg\PsrMvc;
 
 
 use Negotiation\Negotiator;
@@ -42,13 +42,12 @@ class FormatMatcher
     private array $mimeTypes = [];
 
     /**
-     * @param Negotiator $negotiator
      * @param array<string, string[]|string> $formats
      */
-    public function __construct(Negotiator $negotiator, array $formats = self::MIME_TYPES)
+    public function __construct(?Negotiator $negotiator = null, array $formats = self::MIME_TYPES)
     {
         $this->formats = $this->normalizeFormats($formats);
-        $this->negotiator = $negotiator;
+        $this->negotiator = $negotiator ?? new Negotiator();
     }
 
     private function normalizeFormats(array $formats): array

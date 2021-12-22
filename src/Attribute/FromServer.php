@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Zfegg\CallableHandlerDecorator\Attribute;
+namespace Zfegg\PsrMvc\Attribute;
 
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class FromServer implements InjectFrom
 {
-    public ?string $name;
+    public string $name;
 
-    public function __construct(?string $name = null)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }

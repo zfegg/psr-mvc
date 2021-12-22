@@ -1,6 +1,6 @@
 <?php
 
-namespace ZfeggTest\CallableHandlerDecorator;
+namespace ZfeggTest\PsrMvc;
 
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\Diactoros\ResponseFactory;
@@ -22,8 +22,8 @@ use Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Zfegg\CallableHandlerDecorator\ConfigProvider;
-use Zfegg\CallableHandlerDecorator\Router\RouteMetadata;
+use Zfegg\PsrMvc\ConfigProvider;
+use Zfegg\PsrMvc\Route\RouteMetadata;
 use Zfegg\ExpressiveTest\AbstractActionTestCase;
 
 abstract class AbstractTestCase extends AbstractActionTestCase

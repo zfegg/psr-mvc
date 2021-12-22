@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace ZfeggTest\CallableHandlerDecorator;
+namespace ZfeggTest\PsrMvc;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequest;
@@ -8,10 +8,12 @@ use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use TypeError;
-use Zfegg\CallableHandlerDecorator\Exception\InvalidArgumentException;
-use Zfegg\CallableHandlerDecorator\ReflectionFactory;
+use Zfegg\PsrMvc\CallbackHandlerFactory;
+use ZfeggTest\PsrMvc\Example\Bar;
+use ZfeggTest\PsrMvc\Example\Baz;
+use ZfeggTest\PsrMvc\Example\Foo;
 
-class ReflectionFactoryTest extends TestCase
+class CallbackHandlerFactoryTest extends TestCase
 {
 
     /**
@@ -31,10 +33,10 @@ class ReflectionFactoryTest extends TestCase
 
     public function testExists(): void
     {
-        $factory = new ReflectionFactory(new ServiceManager());
+        $factory = new CallbackHandlerFactory(new ServiceManager());
         $this->assertFalse($factory->exists($this->handler));
 
-        $factory = new ReflectionFactory($this->container);
+        $factory = new CallbackHandlerFactory($this->container);
         $this->assertTrue($factory->exists($this->handler));
     }
 
@@ -70,7 +72,7 @@ class ReflectionFactoryTest extends TestCase
      */
     public function testCreate($callable): void
     {
-        $factory = new ReflectionFactory($this->container);
+        $factory = new CallbackHandlerFactory($this->container);
         $handler = $factory->create($callable);
         $request = new ServerRequest();
         $request = $request->withAttribute('name', 'test');
@@ -89,7 +91,7 @@ class ReflectionFactoryTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $factory = new ReflectionFactory($this->container);
+        $factory = new CallbackHandlerFactory($this->container);
         $handler = $factory->create($this->handler);
         $request = new ServerRequest();
         $handler->handle($request);

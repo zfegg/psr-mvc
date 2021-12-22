@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Zfegg\CallableHandlerDecorator;
+namespace Zfegg\PsrMvc;
 
 use Closure;
 use Psr\Container\ContainerInterface;
@@ -10,17 +10,17 @@ use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
-use Zfegg\CallableHandlerDecorator\Attribute\FromAttribute;
-use Zfegg\CallableHandlerDecorator\Attribute\FromBody;
-use Zfegg\CallableHandlerDecorator\Attribute\FromContainer;
-use Zfegg\CallableHandlerDecorator\Attribute\FromCookie;
-use Zfegg\CallableHandlerDecorator\Attribute\FromHeader;
-use Zfegg\CallableHandlerDecorator\Attribute\FromQuery;
-use Zfegg\CallableHandlerDecorator\Attribute\FromServer;
-use Zfegg\CallableHandlerDecorator\Attribute\InjectFrom;
-use Zfegg\CallableHandlerDecorator\Attribute\Middleware;
+use Zfegg\PsrMvc\Attribute\FromAttribute;
+use Zfegg\PsrMvc\Attribute\FromBody;
+use Zfegg\PsrMvc\Attribute\FromContainer;
+use Zfegg\PsrMvc\Attribute\FromCookie;
+use Zfegg\PsrMvc\Attribute\FromHeader;
+use Zfegg\PsrMvc\Attribute\FromQuery;
+use Zfegg\PsrMvc\Attribute\FromServer;
+use Zfegg\PsrMvc\Attribute\InjectFrom;
+use Zfegg\PsrMvc\Attribute\Middleware;
 
-class ReflectionFactory
+class CallbackHandlerFactory
 {
     public const DEFAULT_SEPARATOR = '@';
 
@@ -39,19 +39,19 @@ class ReflectionFactory
     /**
      * @var callable
      */
-    private $paramNameConverter;
+    private $paramNameTransformer;
 
     private string $separator;
     private array $defaultMiddlewares;
 
     public function __construct(
         ContainerInterface $container,
-        callable $paramNameConverter = null,
+        callable $paramNameTransformer = null,
         array $defaultMiddlewares = [],
         string $separator = self::DEFAULT_SEPARATOR,
     ) {
         $this->container = $container;
-        $this->paramNameConverter = $paramNameConverter ?: fn($name) => $name;
+        $this->paramNameTransformer = $paramNameTransformer ?: fn($name) => $name;
         $this->separator = $separator;
         $this->defaultMiddlewares = $defaultMiddlewares;
     }
@@ -76,7 +76,7 @@ class ReflectionFactory
     /**
      * Create param resolver.
      */
-    private function createResolver(
+    private function getParamResolver(
         int $resolverType,
         ?string $name = null,
         ?string $type = null,
@@ -89,7 +89,7 @@ class ReflectionFactory
             case self::FROM_REQUEST:
                 return static fn(ServerRequestInterface $request): ServerRequestInterface => $request;
             case self::FROM_CONTAINER:
-                return static fn() => $this->container->get($name);
+                return fn() => $this->container->get($name);
             case self::FROM_QUERY:
                 return fn(ServerRequestInterface $request): mixed => $request->getQueryParams()[$name] ?? $default;
             case self::FROM_BODY:
@@ -108,18 +108,18 @@ class ReflectionFactory
         }
     }
 
-    private function parameterResolver(ReflectionParameter $parameter): callable
+    private function createParamResolver(ReflectionParameter $parameter): callable
     {
         $type = $parameter->getType();
         $type = $type instanceof ReflectionNamedType ? $type->getName() : null;
-        $name = ($this->paramNameConverter)($parameter->getName());
+        $name = ($this->paramNameTransformer)($parameter->getName());
 
         if ($resolver = $this->resolveByAttribute($parameter, $name)) {
             return $resolver;
         }
 
         if ($type === ServerRequestInterface::class) {
-            return $this->createResolver(self::FROM_REQUEST);
+            return $this->getParamResolver(self::FROM_REQUEST);
         }
 
         if ($type === 'array' ||
@@ -130,14 +130,14 @@ class ReflectionFactory
                 ? $parameter->getDefaultValue()
                 : null;
 
-            return $this->createResolver(self::FROM_ATTR, $name, default: $defaultValue);
+            return $this->getParamResolver(self::FROM_ATTR, $name, default: $defaultValue);
         }
 
         if ($this->container->has($type)) {
-            return $this->createResolver(self::FROM_CONTAINER, $type);
+            return $this->getParamResolver(self::FROM_CONTAINER, $type);
         }
 
-        return $this->createResolver(self::FROM_ATTR2, $name, $type);
+        return $this->getParamResolver(self::FROM_ATTR2, $name, $type);
     }
 
 
@@ -154,19 +154,19 @@ class ReflectionFactory
 
             switch ($attrRef->getName()) {
                 case FromAttribute::class:
-                    return $this->createResolver(self::FROM_ATTR, $name, default: $defaultValue);
+                    return $this->getParamResolver(self::FROM_ATTR, $name, default: $defaultValue);
                 case FromQuery::class:
-                    return $this->createResolver(self::FROM_QUERY, $name, default: $defaultValue);
+                    return $this->getParamResolver(self::FROM_QUERY, $name, default: $defaultValue);
                 case FromBody::class:
-                    return $this->createResolver(self::FROM_BODY, $name, default: $defaultValue);
+                    return $this->getParamResolver(self::FROM_BODY, $name, default: $defaultValue);
                 case FromContainer::class:
-                    return $this->createResolver(self::FROM_CONTAINER, $name);
+                    return $this->getParamResolver(self::FROM_CONTAINER, $name);
                 case FromCookie::class:
-                    return $this->createResolver(self::FROM_COOKIE, $name, default: $defaultValue);
+                    return $this->getParamResolver(self::FROM_COOKIE, $name, default: $defaultValue);
                 case FromHeader::class:
-                    return $this->createResolver(self::FROM_HEADER, $name, default: $defaultValue);
+                    return $this->getParamResolver(self::FROM_HEADER, $name, default: $defaultValue);
                 case FromServer::class:
-                    return $this->createResolver(self::FROM_SERVER, $name, default: $defaultValue);
+                    return $this->getParamResolver(self::FROM_SERVER, $name, default: $defaultValue);
                 default:
                     return null;
             }
@@ -204,17 +204,17 @@ class ReflectionFactory
     /**
      * Create CallableHandlerDecorator by callable or action.
      */
-    public function create(callable|string $callback): CallableHandlerDecorator
+    public function create(callable|string $callback): CallbackHandler
     {
         $callback = $this->normalize($callback);
         $reflector = $this->getCallReflector($callback);
 
         $paramResolvers = [];
         foreach ($reflector->getParameters() as $parameter) {
-            $paramResolvers[$parameter->getName()] = $this->parameterResolver($parameter);
+            $paramResolvers[$parameter->getName()] = $this->createParamResolver($parameter);
         }
 
-        return new CallableHandlerDecorator($callback, $paramResolvers, $this->initMiddleware($reflector));
+        return new CallbackHandler($callback, $paramResolvers, $this->initMiddleware($reflector));
     }
 
     public function exists(string $action): bool

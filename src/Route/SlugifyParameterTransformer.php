@@ -1,8 +1,8 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Router;
+namespace Zfegg\PsrMvc\Route;
 
-use Zfegg\CallableHandlerDecorator\Utils\Word;
+use Zfegg\PsrMvc\Utils\Word;
 
 class SlugifyParameterTransformer implements ParameterTransformer
 {

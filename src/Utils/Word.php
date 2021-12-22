@@ -1,6 +1,6 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Utils;
+namespace Zfegg\PsrMvc\Utils;
 
 
 /**

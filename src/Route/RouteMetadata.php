@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zfegg\CallableHandlerDecorator\Router;
+namespace Zfegg\PsrMvc\Route;
 
 
 use FilesystemIterator;
@@ -11,7 +11,7 @@ use RecursiveRegexIterator;
 use ReflectionClass;
 use ReflectionMethod;
 use RegexIterator;
-use Zfegg\CallableHandlerDecorator\Attribute\Route;
+use Zfegg\PsrMvc\Attribute\Route;
 
 class RouteMetadata
 {
@@ -32,7 +32,7 @@ class RouteMetadata
     /**
      * The file extension of mapping documents.
      */
-    private string $fileExtension = '.php';
+    private string $fileExtension;
 
     /**
      * Cache for AnnotationDriver#getAllClassNames().
@@ -48,7 +48,7 @@ class RouteMetadata
     public function __construct(
         array $paths = [],
         array $excludePaths = [],
-        string $fileExtension = '.php',
+        string $fileExtension = 'Controller.php',
         ParameterTransformer $parameterTransformer = null,
     )
     {

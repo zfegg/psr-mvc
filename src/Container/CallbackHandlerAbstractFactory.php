@@ -1,19 +1,19 @@
 <?php declare(strict_types = 1);
 
-namespace Zfegg\CallableHandlerDecorator\Factory;
+namespace Zfegg\PsrMvc\Container;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
-use Zfegg\CallableHandlerDecorator\ReflectionFactory;
+use Zfegg\PsrMvc\CallbackHandlerFactory;
 
-class CallableHandlerAbstractFactory implements AbstractFactoryInterface
+class CallbackHandlerAbstractFactory implements AbstractFactoryInterface
 {
     /**
      * @inheritDoc
      */
     public function canCreate(ContainerInterface $container, $requestedName)
     {
-        return $container->get(ReflectionFactory::class)->exists($requestedName);
+        return $container->get(CallbackHandlerFactory::class)->exists($requestedName);
     }
 
     /**
@@ -21,6 +21,6 @@ class CallableHandlerAbstractFactory implements AbstractFactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return $container->get(ReflectionFactory::class)->create($requestedName);
+        return $container->get(CallbackHandlerFactory::class)->create($requestedName);
     }
 }

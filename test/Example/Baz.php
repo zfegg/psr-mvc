@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ZfeggTest\CallableHandlerDecorator\Example;
+namespace ZfeggTest\PsrMvc\Example;
 
 
 class Baz

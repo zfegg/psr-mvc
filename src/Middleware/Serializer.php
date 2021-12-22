@@ -1,12 +1,12 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Middleware;
+namespace Zfegg\PsrMvc\Middleware;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Zfegg\CallableHandlerDecorator\FormatMatcher;
+use Zfegg\PsrMvc\FormatMatcher;
 
 class Serializer implements MiddlewareInterface
 {

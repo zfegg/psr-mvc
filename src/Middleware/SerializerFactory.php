@@ -1,12 +1,12 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Middleware;
+namespace Zfegg\PsrMvc\Middleware;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Zfegg\CallableHandlerDecorator\FormatMatcher;
+use Zfegg\PsrMvc\FormatMatcher;
 
 class SerializerFactory implements FactoryInterface
 {

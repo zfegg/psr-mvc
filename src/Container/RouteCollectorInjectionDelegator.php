@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zfegg\CallableHandlerDecorator\Factory;
+namespace Zfegg\PsrMvc\Container;
 
 
 use Doctrine\Common\Annotations\PsrCachedReader;
@@ -12,11 +12,11 @@ use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
 use Mezzio\MiddlewareFactory;
 use Mezzio\Router\RouteCollector;
-use Zfegg\CallableHandlerDecorator\Attribute\Route;
-use Zfegg\CallableHandlerDecorator\ReflectionFactory;
-use Zfegg\CallableHandlerDecorator\Router\RouteMetadata;
+use Zfegg\PsrMvc\Attribute\Route;
+use Zfegg\PsrMvc\CallbackHandlerFactory;
+use Zfegg\PsrMvc\Route\RouteMetadata;
 
-class RouteCollectorDecoratorDelegator implements DelegatorFactoryInterface
+class RouteCollectorInjectionDelegator implements DelegatorFactoryInterface
 {
 
     public function __invoke(ContainerInterface $container, $name, callable $callback, ?array $options = null)
@@ -25,7 +25,7 @@ class RouteCollectorDecoratorDelegator implements DelegatorFactoryInterface
         $router = $callback();
         $metadata = $container->get(RouteMetadata::class);
         $middlewareFactory = $container->get(MiddlewareFactory::class);
-        $handlerFactory = $container->get(ReflectionFactory::class);
+        $handlerFactory = $container->get(CallbackHandlerFactory::class);
 
         $routes = $metadata->getRoutes();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Middleware;
+namespace Zfegg\PsrMvc\Middleware;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

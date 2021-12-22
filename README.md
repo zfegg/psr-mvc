@@ -1,9 +1,9 @@
 Callable handler decorator
 ==========================
 
-[![Build Status](https://travis-ci.org/zfegg/callable-handler-decorator.png)](https://travis-ci.org/zfegg/callable-handler-decorator)
-[![Coverage Status](https://coveralls.io/repos/github/zfegg/callable-handler-decorator/badge.svg?branch=master)](https://coveralls.io/github/zfegg/callable-handler-decorator?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/zfegg/callable-handler-decorator/v/stable.png)](https://packagist.org/packages/zfegg/callable-handler-decorator)
+[![Build Status](https://travis-ci.org/zfegg/psr-mvc.png)](https://travis-ci.org/zfegg/psr-mvc)
+[![Coverage Status](https://coveralls.io/repos/github/zfegg/psr-mvc/badge.svg?branch=master)](https://coveralls.io/github/zfegg/psr-mvc?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/zfegg/psr-mvc/v/stable.png)](https://packagist.org/packages/zfegg/psr-mvc)
 
 
 Reflect callback and convert to psr-server-handler decorator. 
@@ -14,7 +14,7 @@ Installation / 安装
 -------------------
 
 ```bash
-composer require zfegg/callable-handler-decorator
+composer require zfegg/psr-mvc
 ```
 
 Usage / 使用
@@ -23,13 +23,13 @@ Usage / 使用
 ### Example for Mezzio :
 
 ```php
-// Class file Hello.php
+// Class file HelloController.php
 
-class Hello {
+class HelloController {
   public function say(
     \Psr\Http\Message\ServerRequestInterface $request, // Inject request param
-    string $name, // Inject param from $request->getAttribute('name').
-    Foo $foo     //  Inject param from container.
+    string $name, // Auto inject param from $request->getAttribute('name').
+    Foo $foo     // Auto inject param from container.
   ) {
     return new TextResponse('hello ' . $name);
   }
@@ -42,7 +42,7 @@ class Hello {
 // Add ConfigProvider 
 
 new ConfigAggregator([
-  Zfegg\CallableHandlerDecorator\ConfigProvider::class,
+  Zfegg\PsrMvc\ConfigProvider::class,
 ]);
 ```
 
@@ -51,7 +51,7 @@ new ConfigAggregator([
 // config/autoload/global.php
 // Add demo class factories
 
-use Zfegg\CallableHandlerDecorator\Factory\CallableHandlerFactory;
+use Zfegg\PsrMvc\Container\HandlerFactory;
 
 return [
     'dependencies' => [
@@ -59,7 +59,7 @@ return [
             Hello::class,
         ],
         'factories' => [
-            Hello::class . '@say' => CallableHandlerFactory::class, 
+            Hello::class . '@say' => HandlerFactory::class, 
         ],
     ]
 ];
@@ -78,13 +78,12 @@ return [
 
 Require `laminas/laminias-servicemanager`.
 
-
 ```php
 
 // config/autoload/global.php
 // Add demo class factories
 
-use Zfegg\CallableHandlerDecorator\Factory\CallableHandlerAbstractFactory;
+use Zfegg\PsrMvc\Container\CallbackHandlerAbstractFactory;
 
 return [
     'dependencies' => [
@@ -92,7 +91,7 @@ return [
             Hello::class,
         ],
         'abstract_factories' => [
-            CallableHandlerAbstractFactory::class, 
+            CallbackHandlerAbstractFactory::class, 
         ],
     ]
 ];

@@ -1,10 +1,10 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Factory;
+namespace Zfegg\PsrMvc\Container;
 
 use Negotiation\Negotiator;
 use Psr\Container\ContainerInterface;
-use Zfegg\CallableHandlerDecorator\FormatMatcher;
+use Zfegg\PsrMvc\FormatMatcher;
 
 class FormatMatcherFactory
 {

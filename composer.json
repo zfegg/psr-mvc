@@ -1,5 +1,5 @@
 {
-    "name": "zfegg/callable-handler-decorator",
+    "name": "zfegg/psr-mvc",
     "description": "Reflect callback and convert to psr-server-handler decorator. Automatically inject parameters into callbacks.",
     "keywords": [
         "psr",
@@ -26,26 +26,25 @@
         "slevomat/coding-standard": "^6.4",
         "laminas/laminas-servicemanager": "^3.6",
         "laminas/laminas-diactoros": "^2.5",
-        "doctrine/annotations": "^1.13",
         "mezzio/mezzio": "^3.6",
-        "zfegg/expressive-test": "^0.6.1",
         "mezzio/mezzio-fastroute": "^3.3",
         "laminas/laminas-config-aggregator": "^1.7",
         "symfony/cache": "^5.3",
         "symfony/serializer": "^6.0",
-        "willdurand/negotiation": "^3.0"
+        "willdurand/negotiation": "^3.0",
+        "zfegg/expressive-test": "^0.6.1"
     },
     "suggest": {
-        "doctrine/annotations": "Use annotation required."
+        "symfony/serializer": "Auto serialize required."
     },
     "autoload": {
         "psr-4": {
-            "Zfegg\\CallableHandlerDecorator\\" : "src/"
+            "Zfegg\\PsrMvc\\" : "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ZfeggTest\\CallableHandlerDecorator\\" : "test/"
+            "ZfeggTest\\PsrMvc\\" : "test/"
         }
     },
     "scripts": {
@@ -56,7 +55,7 @@
     },
     "extra": {
         "laminas": {
-            "config-provider": "Zfegg\\CallableHandlerDecorator\\ConfigProvider"
+            "config-provider": "Zfegg\\PsrMvc\\ConfigProvider"
         }
     }
 }

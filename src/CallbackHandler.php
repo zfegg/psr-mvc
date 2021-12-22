@@ -1,13 +1,13 @@
 <?php declare(strict_types = 1);
 
-namespace Zfegg\CallableHandlerDecorator;
+namespace Zfegg\PsrMvc;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zfegg\CallableHandlerDecorator\Middleware\MiddlewareInterface;
+use Zfegg\PsrMvc\Middleware\MiddlewareInterface;
 
-class CallableHandlerDecorator implements RequestHandlerInterface
+class CallbackHandler implements RequestHandlerInterface
 {
     /**
      * @var callable

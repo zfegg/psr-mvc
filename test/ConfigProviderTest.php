@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace ZfeggTest\CallableHandlerDecorator;
+namespace ZfeggTest\PsrMvc;
 
 use Laminas\ServiceManager\ServiceManager;
-use Zfegg\CallableHandlerDecorator\ConfigProvider;
+use Zfegg\PsrMvc\ConfigProvider;
 use PHPUnit\Framework\TestCase;
-use Zfegg\CallableHandlerDecorator\ReflectionFactory;
+use Zfegg\PsrMvc\CallbackHandlerFactory;
 
 class ConfigProviderTest extends TestCase
 {
@@ -14,6 +14,6 @@ class ConfigProviderTest extends TestCase
     {
         $container = new ServiceManager((new ConfigProvider())()['dependencies']);
 
-        $this->assertTrue($container->has(ReflectionFactory::class));
+        $this->assertTrue($container->has(CallbackHandlerFactory::class));
     }
 }

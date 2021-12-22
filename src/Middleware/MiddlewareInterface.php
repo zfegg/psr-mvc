@@ -1,6 +1,6 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Middleware;
+namespace Zfegg\PsrMvc\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

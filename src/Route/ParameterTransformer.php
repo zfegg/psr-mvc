@@ -1,6 +1,6 @@
 <?php
 
-namespace Zfegg\CallableHandlerDecorator\Router;
+namespace Zfegg\PsrMvc\Route;
 
 interface ParameterTransformer
 {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Zfegg\CallableHandlerDecorator\Attribute;
+namespace Zfegg\PsrMvc\Attribute;
 
 use Attribute;
 
