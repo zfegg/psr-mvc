@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc\Attribute;
 
@@ -17,7 +18,6 @@ class Route
      * Route path pattern.
      * The exact syntax depends on router you choose.
      * @Required
-     * @var string
      */
     public string $path;
 

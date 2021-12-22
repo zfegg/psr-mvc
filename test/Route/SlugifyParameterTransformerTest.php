@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Route;
 
 use Zfegg\PsrMvc\Route\SlugifyParameterTransformer;
@@ -9,7 +11,7 @@ use ZfeggTest\PsrMvc\Example\MvcExampleController;
 class SlugifyParameterTransformerTest extends TestCase
 {
 
-    public function testTransform()
+    public function testTransform(): void
     {
         $transformer = new SlugifyParameterTransformer();
         $result = $transformer->transform(MvcExampleController::class, 'getList');

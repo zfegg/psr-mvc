@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc;
-
 
 use Negotiation\Negotiator;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,9 +13,9 @@ class FormatMatcher
     public const MIME_TYPES = [
         'json' => ['application/json'],
         'jsonld' => ['application/ld+json'],
-        'jsonhal' =>  ['application/hal+json'],
-        'jsonapi' =>  ['application/vnd.api+json'],
-        'jsonproblem' =>  ['application/problem+json'],
+        'jsonhal' => ['application/hal+json'],
+        'jsonapi' => ['application/vnd.api+json'],
+        'jsonproblem' => ['application/problem+json'],
         'csv' => ['text/csv'],
         'doc' => ['application/msword'],
         'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],

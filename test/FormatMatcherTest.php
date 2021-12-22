@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc;
 
 use Laminas\Diactoros\ServerRequestFactory;
-use Psr\Http\Message\ServerRequestInterface;
 use Zfegg\PsrMvc\FormatMatcher;
 use PHPUnit\Framework\TestCase;
 
 class FormatMatcherTest extends TestCase
 {
 
-    public function testGetBestFormat()
+    public function testGetBestFormat(): void
     {
         $matcher = new FormatMatcher();
 

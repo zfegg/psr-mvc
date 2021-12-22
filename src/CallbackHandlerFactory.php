@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc;
 
@@ -46,7 +48,7 @@ class CallbackHandlerFactory
 
     public function __construct(
         ContainerInterface $container,
-        callable $paramNameTransformer = null,
+        ?callable $paramNameTransformer = null,
         array $defaultMiddlewares = [],
         string $separator = self::DEFAULT_SEPARATOR,
     ) {
@@ -59,10 +61,9 @@ class CallbackHandlerFactory
     /**
      * Get call reflector.
      *
-     * @return ReflectionFunction|ReflectionMethod
      * @throws \ReflectionException
      */
-    private function getCallReflector(callable $callback)
+    private function getCallReflector(callable $callback): ReflectionFunction|ReflectionMethod
     {
         if (is_object($callback) && ! $callback instanceof Closure) {
             $callback = [$callback, '__invoke'];
@@ -80,9 +81,8 @@ class CallbackHandlerFactory
         int $resolverType,
         ?string $name = null,
         ?string $type = null,
-        mixed $default = null
-    ): callable
-    {
+        ?mixed $default = null
+    ): callable {
         switch ($resolverType) {
             case self::FROM_ATTR:
                 return fn(ServerRequestInterface $request) => $request->getAttribute($name, $default);
@@ -223,5 +223,4 @@ class CallbackHandlerFactory
 
         return method_exists($class, $method) && $this->container->has($class);
     }
-
 }

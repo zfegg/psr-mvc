@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Middleware;
 
 use Laminas\Diactoros\ServerRequestFactory;
@@ -11,7 +13,7 @@ use ZfeggTest\PsrMvc\AbstractTestCase;
 class SerializerTest extends AbstractTestCase
 {
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $request = (new ServerRequestFactory())->createServerRequest('GET', '/')->withAttribute('format', 'json');
         $middlewares = $this->container->get(Middlewares::class);

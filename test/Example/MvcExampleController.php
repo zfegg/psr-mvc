@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types = 1);
 
 namespace ZfeggTest\PsrMvc\Example;
 
-
 use Laminas\Diactoros\Response\EmptyResponse;
+use Psr\Http\Message\ResponseInterface;
 use Zfegg\PsrMvc\Attribute\FromAttribute;
 use Zfegg\PsrMvc\Attribute\FromBody;
 use Zfegg\PsrMvc\Attribute\FromContainer;
@@ -40,19 +41,18 @@ class MvcExampleController
         string $host,
         #[FromServer('REMOTE_ADDR')]
         string $ip,
-    )
-    {
+    ): void {
         return ;
     }
 
     #[HttpHead]
-    public function head()
+    public function head(): ResponseInterface
     {
         return new EmptyResponse();
     }
 
     #[HttpGet]
-    public function getList()
+    public function getList(): void
     {
     }
 
@@ -61,23 +61,22 @@ class MvcExampleController
     public function get(
         #[FromAttribute]
         int $id,
-    )
-    {
+    ): array {
         return [$id];
     }
 
     #[HttpPut]
-    public function put()
+    public function put(): void
     {
     }
 
     #[HttpPatch]
-    public function patch()
+    public function patch(): void
     {
     }
 
     #[HttpDelete]
-    public function delete()
+    public function delete(): void
     {
     }
 }

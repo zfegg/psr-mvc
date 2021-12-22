@@ -1,14 +1,12 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc;
 
-use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
-use Laminas\ServiceManager\Factory\InvokableFactory;
 use Mezzio\Router\RouteCollector;
-use Zfegg\PsrMvc\Container\CallbackHandlerFactoryFactory;
 use Zfegg\PsrMvc\Container\RouteCollectorInjectionDelegator;
 use Zfegg\PsrMvc\Middleware\Middlewares;
-use Zfegg\PsrMvc\Middleware\MiddlewaresFactory;
 use Zfegg\PsrMvc\Middleware\Serializer;
 use Zfegg\PsrMvc\Route\RouteMetadata;
 
@@ -20,9 +18,9 @@ class ConfigProvider
         return [
             'dependencies'                => [
                 'factories' => [
-                    CallbackHandlerFactory::class => CallbackHandlerFactoryFactory::class,
+                    CallbackHandlerFactory::class => Container\CallbackHandlerFactoryFactory::class,
                     RouteMetadata::class          => Container\RouteMetadataFactory::class,
-                    Middlewares::class            => MiddlewaresFactory::class,
+                    Middlewares::class            => Container\MiddlewaresFactory::class,
                     FormatMatcher::class          => Container\FormatMatcherFactory::class,
                 ],
                 'delegators' => [

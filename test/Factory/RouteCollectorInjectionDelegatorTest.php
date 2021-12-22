@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Factory;
 
 use ZfeggTest\PsrMvc\AbstractTestCase;
@@ -7,7 +9,7 @@ use ZfeggTest\PsrMvc\AbstractTestCase;
 class RouteCollectorInjectionDelegatorTest extends AbstractTestCase
 {
 
-    public function testCall()
+    public function testCall(): void
     {
         $this->withCookie('cookie', 'test');
         $this->post('/mvc-example/post?query=123', ['body' => 456])->assertNoContent();

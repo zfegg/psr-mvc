@@ -37,6 +37,9 @@
     <config name="installed_paths" value="vendor/slevomat/coding-standard/SlevomatCodingStandard"/>
     <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing" />
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing" />
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHintSpacing" />
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint" >
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification" />
     </rule>
@@ -46,9 +49,6 @@
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint" >
         <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification" />
-        <properties>
-            <property name="enableNativeTypeHint" value="false" />
-        </properties>
     </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses" />
 

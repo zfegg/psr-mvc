@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc\Container;
 
@@ -19,7 +21,7 @@ class CallbackHandlerAbstractFactory implements AbstractFactoryInterface
     /**
      * @inheritDoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         return $container->get(CallbackHandlerFactory::class)->create($requestedName);
     }

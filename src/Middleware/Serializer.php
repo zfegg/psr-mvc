@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Zfegg\PsrMvc\Middleware;
 
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -16,8 +18,7 @@ class Serializer implements MiddlewareInterface
         private SerializerInterface $serializer,
         private ResponseFactoryInterface $responseFactory,
         private array $context = [],
-    )
-    {
+    ) {
     }
 
     public function process(ServerRequestInterface $request, callable $next): ResponseInterface

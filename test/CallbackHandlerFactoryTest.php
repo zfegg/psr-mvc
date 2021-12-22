@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace ZfeggTest\PsrMvc;
 
@@ -16,15 +18,9 @@ use ZfeggTest\PsrMvc\Example\Foo;
 class CallbackHandlerFactoryTest extends TestCase
 {
 
-    /**
-     * @var string
-     */
-    private $handler = Foo::class . '@test';
+    private string $handler = Foo::class . '@test';
 
-    /**
-     * @var ServiceManager
-     */
-    private $container;
+    private ServiceManager $container;
 
     protected function setUp(): void
     {
@@ -68,9 +64,8 @@ class CallbackHandlerFactoryTest extends TestCase
     /**
      * Test create
      * @dataProvider createCallableTypes()
-     * @param callable|string $callable
      */
-    public function testCreate($callable): void
+    public function testCreate(callable|string $callable): void
     {
         $factory = new CallbackHandlerFactory($this->container);
         $handler = $factory->create($callable);

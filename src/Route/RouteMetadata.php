@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc\Route;
-
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -49,9 +49,8 @@ class RouteMetadata
         array $paths = [],
         array $excludePaths = [],
         string $fileExtension = 'Controller.php',
-        ParameterTransformer $parameterTransformer = null,
-    )
-    {
+        ?ParameterTransformer $parameterTransformer = null,
+    ) {
         $this->addPaths($paths);
         $this->addExcludePaths($excludePaths);
         $this->fileExtension = $fileExtension;
@@ -63,9 +62,8 @@ class RouteMetadata
      *
      * @param string[] $paths
      *
-     * @return void
      */
-    public function addPaths(array $paths)
+    public function addPaths(array $paths): void
     {
         $this->paths = array_unique(array_merge($this->paths, $paths));
     }
@@ -85,9 +83,8 @@ class RouteMetadata
      *
      * @param string[] $paths
      *
-     * @return void
      */
-    public function addExcludePaths(array $paths)
+    public function addExcludePaths(array $paths): void
     {
         $this->excludePaths = array_unique(array_merge($this->excludePaths, $paths));
     }
@@ -199,7 +196,6 @@ class RouteMetadata
                 $baseRoutes[] = $classAttrRef->newInstance();
             }
             foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-
                 foreach ($method->getAttributes(Route::class, 2) as $methodAttrRef) {
                     /** @var Route $routeAttr */
                     $routeAttr = $methodAttrRef->newInstance();

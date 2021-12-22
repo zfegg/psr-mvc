@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -9,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class JsonSerializerTest extends TestCase
 {
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $serializer = new JsonSerializer();
         $res = $serializer->process(

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc;
 
@@ -17,10 +19,8 @@ class CallbackHandler implements RequestHandlerInterface
 
     public function __construct(
         callable $callback,
-
         /** @var callable[] */
         private array $paramResolvers,
-
         /** @var MiddlewareInterface[] */
         private array $middlewares = []
     ) {

@@ -1,11 +1,11 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 namespace ZfeggTest\PsrMvc\Factory;
 
-use Laminas\ServiceManager\ServiceManager;
 use Zfegg\PsrMvc\CallbackHandler;
 use Zfegg\PsrMvc\Container\HandlerFactory;
-use Zfegg\PsrMvc\Container\CallbackHandlerFactoryFactory;
 use ZfeggTest\PsrMvc\AbstractTestCase;
 use ZfeggTest\PsrMvc\Example\Foo;
 

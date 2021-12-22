@@ -1,7 +1,8 @@
 <?php
 
-namespace Zfegg\PsrMvc\Utils;
+declare(strict_types = 1);
 
+namespace Zfegg\PsrMvc\Utils;
 
 /**
  * Sample `Doctrine\Inflector\Inflector`

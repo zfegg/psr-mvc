@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc\Attribute;
 
@@ -13,8 +14,7 @@ class HttpPut extends Route
         array $middlewares = [],
         ?string $name = null,
         ?array $options = [],
-    )
-    {
+    ) {
         parent::__construct($path, $middlewares, $name, $options, ['PUT']);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Route;
 
 use Zfegg\PsrMvc\Attribute\Route;
@@ -10,7 +12,7 @@ use ZfeggTest\PsrMvc\AbstractTestCase;
 class RouteMetadataTest extends AbstractTestCase
 {
 
-    public function testGetRoutes()
+    public function testGetRoutes(): void
     {
         $routeMetadata = $this->container->get(RouteMetadata::class);
         $routeMetadata->setFileExtension('Controller.php');
