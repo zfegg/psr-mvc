@@ -8,6 +8,7 @@ use Mezzio\Router\RouteCollector;
 use Zfegg\PsrMvc\Container\RouteCollectorInjectionDelegator;
 use Zfegg\PsrMvc\Middleware\Middlewares;
 use Zfegg\PsrMvc\Middleware\Serializer;
+use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
 use Zfegg\PsrMvc\Route\RouteMetadata;
 
 class ConfigProvider
@@ -22,6 +23,7 @@ class ConfigProvider
                     RouteMetadata::class          => Container\RouteMetadataFactory::class,
                     Middlewares::class            => Container\MiddlewaresFactory::class,
                     FormatMatcher::class          => Container\FormatMatcherFactory::class,
+                    ParamResolverManager::class   => Container\ParamResolverManagerFactory::class,
                 ],
                 'delegators' => [
                     RouteCollector::class => [

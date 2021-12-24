@@ -7,12 +7,13 @@ namespace Zfegg\PsrMvc\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class FromBody implements InjectFrom
+class FromBody implements ParamResolverAttributeInterface
 {
-    public ?string $name;
 
-    public function __construct(?string $name = null)
-    {
-        $this->name = $name;
+    public function __construct(
+        public ?string $name = null,
+        public bool $root = false,
+        public array $serializerContext = []
+    ) {
     }
 }

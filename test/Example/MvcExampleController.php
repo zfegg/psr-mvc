@@ -66,13 +66,18 @@ class MvcExampleController
     }
 
     #[HttpPut]
-    public function put(): void
-    {
+    public function put(
+        #[FromBody]
+        Post $post
+    ): void {
     }
 
     #[HttpPatch]
-    public function patch(): void
-    {
+    public function patch(
+        #[FromBody(root: true)]
+        array $post
+    ): void {
+        return ;
     }
 
     #[HttpDelete]

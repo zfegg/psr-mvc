@@ -18,8 +18,10 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Zfegg\PsrMvc\ConfigProvider;
@@ -51,15 +53,15 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                 return [
                     'dependencies' => [
                         'services' => [
-                            SerializerInterface::class => new Serializer(
+                            Serializer::class => new Serializer(
                                 [
                                     new DateTimeZoneNormalizer(),
                                     new DateTimeNormalizer(),
-                                    //                    new ObjectNormalizer(
-                                    //                        null,
-                                    //                        new CamelCaseToSnakeCaseNameConverter(),
-                                    //                        null,
-                                    //                    ),
+                                    new ObjectNormalizer(
+                                        null,
+                                        new CamelCaseToSnakeCaseNameConverter(),
+                                        null,
+                                    ),
                                 ],
                                 [
                                     new JsonEncoder(),
@@ -69,6 +71,9 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                             CacheItemPoolInterface::class => new ArrayAdapter(),
                             ResponseFactoryInterface::class => new ResponseFactory(),
                             'foo' => 'foo-value',
+                        ],
+                        'aliases' => [
+                            SerializerInterface::class => Serializer::class,
                         ]
                     ],
                     RouteMetadata::class => [

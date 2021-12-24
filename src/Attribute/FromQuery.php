@@ -7,7 +7,7 @@ namespace Zfegg\PsrMvc\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class FromQuery implements InjectFrom
+class FromQuery implements ParamResolverAttributeInterface
 {
     public ?string $name;
 

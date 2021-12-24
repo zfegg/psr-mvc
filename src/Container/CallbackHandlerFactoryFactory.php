@@ -8,15 +8,13 @@ use Psr\Container\ContainerInterface;
 use Zfegg\PsrMvc\Middleware\Middlewares;
 use Zfegg\PsrMvc\Middleware\Serializer;
 use Zfegg\PsrMvc\CallbackHandlerFactory;
-use Zfegg\PsrMvc\Utils\Word;
+use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
 
 class CallbackHandlerFactoryFactory
 {
     public function __invoke(ContainerInterface $container): CallbackHandlerFactory
     {
         $config = $container->get('config')[CallbackHandlerFactory::class] ?? [];
-
-        $config['paramNameTransformer'] = $config['paramNameTransformer'] ?? [Word::class, 'tableize'];
 
         if (isset($config['defaultMiddlewares'])) {
             foreach ($config['defaultMiddlewares'] as $key => &$middleware) {
@@ -35,6 +33,7 @@ class CallbackHandlerFactoryFactory
 
         return new CallbackHandlerFactory(
             $container,
+            $container->get(ParamResolverManager::class),
             ...$config,
         );
     }

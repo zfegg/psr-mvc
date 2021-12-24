@@ -6,8 +6,6 @@ namespace ZfeggTest\PsrMvc;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\ServiceManager\ServiceManager;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use TypeError;
 use Zfegg\PsrMvc\CallbackHandlerFactory;
@@ -15,25 +13,17 @@ use ZfeggTest\PsrMvc\Example\Bar;
 use ZfeggTest\PsrMvc\Example\Baz;
 use ZfeggTest\PsrMvc\Example\Foo;
 
-class CallbackHandlerFactoryTest extends TestCase
+class CallbackHandlerFactoryTest extends AbstractTestCase
 {
 
     private string $handler = Foo::class . '@test';
 
-    private ServiceManager $container;
-
-    protected function setUp(): void
-    {
-        $this->container = new ServiceManager(['invokables' => [Foo::class, Bar::class]]);
-    }
 
     public function testExists(): void
     {
-        $factory = new CallbackHandlerFactory(new ServiceManager());
-        $this->assertFalse($factory->exists($this->handler));
-
-        $factory = new CallbackHandlerFactory($this->container);
-        $this->assertTrue($factory->exists($this->handler));
+        $factory = $this->container->get(CallbackHandlerFactory::class);
+        $this->assertFalse($factory->exists(Foo::class . '@notFound'));
+        $this->assertTrue($factory->exists(Foo::class . '@test'));
     }
 
 
@@ -67,7 +57,7 @@ class CallbackHandlerFactoryTest extends TestCase
      */
     public function testCreate(callable|string $callable): void
     {
-        $factory = new CallbackHandlerFactory($this->container);
+        $factory = $this->container->get(CallbackHandlerFactory::class);
         $handler = $factory->create($callable);
         $request = new ServerRequest();
         $request = $request->withAttribute('name', 'test');
@@ -86,7 +76,7 @@ class CallbackHandlerFactoryTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $factory = new CallbackHandlerFactory($this->container);
+        $factory = $this->container->get(CallbackHandlerFactory::class);
         $handler = $factory->create($this->handler);
         $request = new ServerRequest();
         $handler->handle($request);

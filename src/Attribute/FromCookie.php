@@ -7,7 +7,7 @@ namespace Zfegg\PsrMvc\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class FromCookie implements InjectFrom
+class FromCookie implements ParamResolverAttributeInterface
 {
     public ?string $name;
 
