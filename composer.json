@@ -1,12 +1,11 @@
 {
     "name": "zfegg/psr-mvc",
-    "description": "Reflect callback and convert to psr-server-handler decorator. Automatically inject parameters into callbacks.",
+    "description": "Using MVC for PSR applications, like dotnet core MVC.",
     "keywords": [
         "psr",
-        "callable",
+        "mvc",
         "handler",
-        "decorator",
-        "reflection"
+        "controller"
     ],
     "require": {
         "php": ">=8.0",
