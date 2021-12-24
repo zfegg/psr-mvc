@@ -1,8 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
 
-namespace Zfegg\CallableHandlerDecorator;
+declare(strict_types = 1);
 
-use Zfegg\CallableHandlerDecorator\Factory\ReflectionFactoryFactory;
+namespace Zfegg\PsrMvc;
+
+use Mezzio\Router\RouteCollector;
+use Zfegg\PsrMvc\Container\RouteCollectorInjectionDelegator;
+use Zfegg\PsrMvc\Middleware\Middlewares;
+use Zfegg\PsrMvc\Middleware\Serializer;
+use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
+use Zfegg\PsrMvc\Route\RouteMetadata;
 
 class ConfigProvider
 {
@@ -10,11 +17,30 @@ class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies' => [
+            'dependencies'                => [
                 'factories' => [
-                    ReflectionFactory::class => ReflectionFactoryFactory::class,
+                    CallbackHandlerFactory::class => Container\CallbackHandlerFactoryFactory::class,
+                    RouteMetadata::class          => Container\RouteMetadataFactory::class,
+                    Middlewares::class            => Container\MiddlewaresFactory::class,
+                    FormatMatcher::class          => Container\FormatMatcherFactory::class,
+                    ParamResolverManager::class   => Container\ParamResolverManagerFactory::class,
+                ],
+                'delegators' => [
+                    RouteCollector::class => [
+                        RouteCollectorInjectionDelegator::class,
+                    ],
+                ],
+                'aliases' => [
                 ]
-            ]
+            ],
+            RouteMetadata::class => [
+                'paths' => []
+            ],
+            CallbackHandlerFactory::class => [
+                'defaultMiddlewares' => [
+                    Serializer::class,
+                ]
+            ],
         ];
     }
 }
