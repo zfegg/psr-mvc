@@ -73,14 +73,17 @@ class ParamResolverManager extends AbstractPluginManager
             return $this->get(FromAttribute::class)->resolve(new FromAttribute(), $parameter);
         }
 
-        if ($this->get(FromContainer::class)->has($type)) {
-            return $this->get(FromContainer::class)->resolve(new FromContainer($type), $parameter);
-        }
-
         $name = $parameter->getName();
+        $container = $this->creationContext;
+        $hasService = $this->creationContext->has($type);
 
-        return static function (ServerRequestInterface $request) use ($name, $type) {
-            return $request->getAttribute($type, $request->getAttribute($name));
+        return static function (ServerRequestInterface $request) use ($name, $type, $hasService, $container) {
+            $value = $request->getAttribute($type, $request->getAttribute($name));
+            if ($value === null && $hasService) {
+                return $container->get($type);
+            }
+
+            return $value;
         };
     }
 }
