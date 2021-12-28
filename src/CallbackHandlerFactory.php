@@ -34,6 +34,11 @@ class CallbackHandlerFactory
         $this->manager = $paramResolverManager;
     }
 
+    public function getSeparator(): string
+    {
+        return $this->separator;
+    }
+
     /**
      * Get call reflector.
      *
