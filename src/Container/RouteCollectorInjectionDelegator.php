@@ -8,8 +8,8 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
 use Mezzio\MiddlewareFactory;
 use Mezzio\Router\RouteCollectorInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Zfegg\PsrMvc\CallbackHandlerFactory;
+use Zfegg\PsrMvc\LazyCallbackHandler;
 use Zfegg\PsrMvc\Route\RouteMetadata;
 
 class RouteCollectorInjectionDelegator implements DelegatorFactoryInterface
@@ -39,9 +39,7 @@ class RouteCollectorInjectionDelegator implements DelegatorFactoryInterface
                 $middlewareFactory->prepare([
                     ...$routeMeta->middlewares,
                     // Lazy load
-                    static fn(ServerRequestInterface $request) => $handlerFactory
-                        ->create([$container->get($className), $action])
-                        ->handle($request)
+                    new LazyCallbackHandler($handlerFactory, $className . $handlerFactory->getSeparator() . $action),
                 ]),
                 $routeMeta->methods,
                 $routeMeta->name,

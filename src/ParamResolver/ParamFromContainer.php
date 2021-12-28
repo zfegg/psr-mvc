@@ -16,11 +16,6 @@ class ParamFromContainer implements ParamResolverInterface
         $this->container = $container;
     }
 
-    public function has(string $name): bool
-    {
-        return $this->container->has($name);
-    }
-
     public function resolve(object $attr, ReflectionParameter $parameter): callable
     {
         /** @var \Zfegg\PsrMvc\Attribute\FromContainer $attr */
