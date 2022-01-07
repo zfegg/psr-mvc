@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Zfegg\PsrMvc\PrepareResponse;
 
 use Psr\Http\Message\ResponseFactoryInterface;

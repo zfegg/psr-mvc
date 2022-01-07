@@ -1,13 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\PrepareResponse;
 
-use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Application;
 use Zfegg\PsrMvc\ControllerHandler;
-use Zfegg\PsrMvc\PrepareResponse\SerializerResponse;
-use PHPUnit\Framework\TestCase;
 use ZfeggTest\PsrMvc\AbstractTestCase;
 use ZfeggTest\PsrMvc\Example\MvcExampleController;
 
@@ -26,8 +24,11 @@ class SerializerResponseTest extends AbstractTestCase
             ->assertJson(['test']);
 
 
-        $this->get('/example/serialize-result', ['Accept' => 'invalid/mime-type'])
-            ->assertSuccessful()
-            ->assertJson(['test']);
+        $this->get('/example/serializer-response-assert-returned', ['Accept' => 'invalid/mime-type'])
+            ->assertNoContent();
+
+
+        $this->get('/example/serializer-response-assert-void', ['Accept' => 'invalid/mime-type'])
+            ->assertNoContent();
     }
 }

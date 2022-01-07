@@ -73,6 +73,18 @@ class MvcExampleController
         return ['test'];
     }
 
+    #[PrepareResponse(SerializerResponse::class)]
+    public function serializerResponseAssertReturned(): EmptyResponse
+    {
+        return new EmptyResponse();
+    }
+
+
+    #[PrepareResponse(SerializerResponse::class)]
+    public function serializerResponseAssertVoid(): void
+    {
+    }
+
     #[HttpPost]
     public function post(
         #[FromQuery]

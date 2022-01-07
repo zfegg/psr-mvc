@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\PrepareResponse;
 
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Application;
 use Zfegg\PsrMvc\ControllerHandler;
-use Zfegg\PsrMvc\PrepareResponse\DefaultResponse;
-use PHPUnit\Framework\TestCase;
 use ZfeggTest\PsrMvc\AbstractTestCase;
 use ZfeggTest\PsrMvc\Example\MvcExampleController;
 

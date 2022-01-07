@@ -35,7 +35,7 @@ class CallbackHandlerFactory
      *
      * @throws \ReflectionException
      */
-    private function getCallReflector(callable $callback): ReflectionFunction|ReflectionMethod
+    private function getCallReflector(callable $callback): ReflectionFunctionAbstract
     {
         if (is_object($callback) && ! $callback instanceof Closure) {
             $callback = [$callback, '__invoke'];

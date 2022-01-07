@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc\Container;
 
-use Negotiation\Negotiator;
 use Psr\Container\ContainerInterface;
 use Zfegg\PsrMvc\FormatMatcher;
 

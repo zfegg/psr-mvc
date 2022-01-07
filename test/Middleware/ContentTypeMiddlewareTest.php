@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Middleware;
 
 use Mezzio\Application;
-use Zfegg\PsrMvc\ControllerHandler;
 use ZfeggTest\PsrMvc\AbstractTestCase;
-use ZfeggTest\PsrMvc\Example\MvcExampleController;
 
 class ContentTypeMiddlewareTest extends AbstractTestCase
 {

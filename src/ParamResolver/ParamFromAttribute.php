@@ -12,8 +12,7 @@ class ParamFromAttribute implements ParamResolverInterface
 {
     public function __construct(
         private ParameterConverterInterface $parameterConverter
-    )
-    {
+    ) {
     }
 
     public function resolve(object $attr, ReflectionParameter $parameter): callable

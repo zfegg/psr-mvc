@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Zfegg\PsrMvc;
 
 use Mezzio\Router\RouteResult;

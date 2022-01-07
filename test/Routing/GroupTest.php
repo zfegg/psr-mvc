@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Routing;
 
 use Zfegg\PsrMvc\Routing\Group;
@@ -8,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class GroupTest extends TestCase
 {
 
-    public function testGets()
+    public function testGets(): void
     {
         $group = (new Group('/api', ['foo'], 'test.'))->group('/v1', ['bar'], 'v1.');
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc;
 
 use Mezzio\Application;
@@ -9,7 +11,7 @@ use ZfeggTest\PsrMvc\Example\MvcExampleController;
 class ControllerHandlerTest extends AbstractTestCase
 {
 
-    public function testHandler()
+    public function testHandler(): void
     {
         $app = $this->container->get(Application::class);
         $app->post('/example[/{action}]', ControllerHandler::class)

@@ -1,6 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Zfegg\PsrMvc\Routing;
+
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class Group
 {
@@ -38,13 +43,13 @@ class Group
     /**
      * Add a route for the route middleware to match.
      *
-     * @param string|array|callable|\Psr\Http\Server\MiddlewareInterface|\Psr\Http\Server\RequestHandlerInterface $middleware
+     * @param string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
      *     Middleware or request handler (or service name resolving to one of
      *     those types) to associate with route.
      */
     public function route(
         string $path,
-        $middleware,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
         ?array $methods = null,
         ?string $name = null,
         array $options = []
@@ -71,65 +76,89 @@ class Group
     }
 
     /**
-     * @param string|array|callable|\Psr\Http\Server\MiddlewareInterface|\Psr\Http\Server\RequestHandlerInterface $middleware
+     * @param string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
      *     Middleware or request handler (or service name resolving to one of
      *     those types) to associate with route.
      */
-    public function get(string $path, $middleware, ?string $name = null, array $options = []): self
-    {
+    public function get(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array $options = []
+    ): self {
         return $this->route($path, $middleware, ['GET'], $name, $options);
     }
 
     /**
-     * @param string|array|callable|\Psr\Http\Server\MiddlewareInterface|\Psr\Http\Server\RequestHandlerInterface $middleware
+     * @param string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
      *     Middleware or request handler (or service name resolving to one of
      *     those types) to associate with route.
      */
-    public function post(string $path, $middleware, ?string $name = null, array $options = []): self
-    {
+    public function post(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array $options = []
+    ): self {
         return $this->route($path, $middleware, ['POST'], $name, $options);
     }
 
     /**
-     * @param string|array|callable|\Psr\Http\Server\MiddlewareInterface|\Psr\Http\Server\RequestHandlerInterface $middleware
+     * @param string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
      *     Middleware or request handler (or service name resolving to one of
      *     those types) to associate with route.
-     * @param null|string $name The name of the route.
+     * @param null|string                                                       $name The name of the route.
      */
-    public function put(string $path, $middleware, ?string $name = null, array $options = []): self
-    {
+    public function put(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array $options = []
+    ): self {
         return $this->route($path, $middleware, ['PUT'], $name, $options);
     }
 
     /**
-     * @param string|array|callable|\Psr\Http\Server\MiddlewareInterface|\Psr\Http\Server\RequestHandlerInterface $middleware
+     * @param string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
      *     Middleware or request handler (or service name resolving to one of
      *     those types) to associate with route.
-     * @param null|string $name The name of the route.
+     * @param null|string                                                       $name The name of the route.
      */
-    public function patch(string $path, $middleware, ?string $name = null, array $options = []): self
-    {
+    public function patch(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array $options = []
+    ): self {
         return $this->route($path, $middleware, ['PATCH'], $name, $options);
     }
 
     /**
-     * @param string|array|callable|\Psr\Http\Server\MiddlewareInterface|\Psr\Http\Server\RequestHandlerInterface $middleware
+     * @param string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
      *     Middleware or request handler (or service name resolving to one of
      *     those types) to associate with route.
      */
-    public function delete(string $path, $middleware, ?string $name = null, array $options = []): self
-    {
+    public function delete(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array $options = []
+    ): self {
         return $this->route($path, $middleware, ['DELETE'], $name, $options);
     }
 
     /**
-     * @param string|array|callable|\Psr\Http\Server\MiddlewareInterface|\Psr\Http\Server\RequestHandlerInterface $middleware
+     * @param string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
      *     Middleware or request handler (or service name resolving to one of
      *     those types) to associate with route.
-     * @param null|string $name The name of the route.
+     * @param null|string                                                       $name The name of the route.
      */
-    public function any(string $path, $middleware, ?string $name = null, array $options = []): self
-    {
+    public function any(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array $options = []
+    ): self {
         return $this->route($path, $middleware, null, $name, $options);
     }
 
