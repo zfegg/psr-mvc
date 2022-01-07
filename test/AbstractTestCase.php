@@ -24,8 +24,9 @@ use Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Zfegg\ExpressiveTest\PassMiddleware;
 use Zfegg\PsrMvc\ConfigProvider;
-use Zfegg\PsrMvc\Route\RouteMetadata;
+use Zfegg\PsrMvc\Routing\RouteMetadata;
 use Zfegg\ExpressiveTest\AbstractActionTestCase;
 
 abstract class AbstractTestCase extends AbstractActionTestCase
@@ -71,6 +72,7 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                             CacheItemPoolInterface::class => new ArrayAdapter(),
                             ResponseFactoryInterface::class => new ResponseFactory(),
                             'foo' => 'foo-value',
+                            'middleware1' => new PassMiddleware(),
                         ],
                         'aliases' => [
                             SerializerInterface::class => Serializer::class,
@@ -79,6 +81,15 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                     RouteMetadata::class => [
                         'paths' => [
                             __DIR__ . '/Example'
+                        ],
+                        'groups' => [
+                            'test' => [
+                                'prefix' => '/api',
+                                'middlewares' => [
+                                    'middleware1',
+                                ],
+                                'name' => 'api.test.'
+                            ]
                         ]
                     ]
                 ];

@@ -4,83 +4,90 @@ declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc;
 
+use InvalidArgumentException;
 use Negotiation\Negotiator;
 use Psr\Http\Message\ServerRequestInterface;
 
 class FormatMatcher
 {
-
-    public const MIME_TYPES = [
-        'json' => ['application/json'],
-        'jsonld' => ['application/ld+json'],
-        'jsonhal' => ['application/hal+json'],
-        'jsonapi' => ['application/vnd.api+json'],
-        'jsonproblem' => ['application/problem+json'],
-        'csv' => ['text/csv'],
-        'doc' => ['application/msword'],
-        'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-        'js' => ['application/javascript'],
-        'html' => ['text/html', 'application/xhtml+xml'],
-        'txt' => ['text/plain'],
-        'xml' => ['text/xml', 'application/xml', 'application/x-xml'],
-        'xls' => ['application/vnd.ms-excel'],
-        'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
-        'yaml' => ['text/yaml'],
-        'yml' => ['text/yaml'],
-    ];
-
     /**
      * @var array<string, string[]>
      */
     private array $formats;
 
-    private Negotiator $negotiator;
+    private array $extensions = [];
 
-    /**
-     * @var array<string, string>
-     */
     private array $mimeTypes = [];
+    private Negotiator $negotiator;
+    private string $defaultFormat;
 
     /**
      * @param array<string, string[]|string> $formats
      */
-    public function __construct(?Negotiator $negotiator = null, array $formats = self::MIME_TYPES)
+    public function __construct(?array $formats = null)
     {
-        $this->formats = $this->normalizeFormats($formats);
-        $this->negotiator = $negotiator ?? new Negotiator();
+        $this->formats = self::normalizeFormats($formats);
+        $this->negotiator = new Negotiator();
+        $this->defaultFormat = key($this->formats);
     }
 
-    private function normalizeFormats(array $formats): array
+    public function getFormat(string $format): array
     {
-        $normalizedFormats = [];
-        foreach ($formats as $format => $mimeTypes) {
-            if (is_int($format)) {
-                $format = $mimeTypes;
-                $mimeTypes = self::fromExtension($format);
-            }
-            $mimeTypes = (array) $mimeTypes;
+        return $this->formats[$format];
+    }
 
-            $normalizedFormats[$format] = $mimeTypes;
-            foreach ($mimeTypes as $mimeType) {
+    public function getDefaultFormat(): string
+    {
+        return $this->defaultFormat;
+    }
+
+    /**
+     * Return the default formats.
+     */
+    public static function getDefaultFormats(): array
+    {
+        return require __DIR__ . '/formats_defaults.php';
+    }
+
+    private function normalizeFormats(?array $formats = null): array
+    {
+        $defaults = static::getDefaultFormats();
+
+        if (empty($formats)) {
+            $formats = $defaults;
+        }
+
+        $results = [];
+        foreach ($formats as $format => $config) {
+            if (is_string($config) && isset($defaults[$config])) {
+                $format = $config;
+                $config = $defaults[$config];
+            }
+
+            $config['extension'] = $config['extension'] ?? [$format];
+
+            if (empty($config['mime-type']) || empty($config['extension'])) {
+                throw new InvalidArgumentException(
+                    sprintf('Invalid format name %s', $config)
+                );
+            }
+
+            $results[$format] = $config;
+            foreach ($config['extension'] as $ext) {
+                $this->extensions[$ext] = $format;
+            }
+
+            foreach ($config['mime-type'] as $mimeType) {
                 $this->mimeTypes[$mimeType] = $format;
             }
         }
 
-        return $normalizedFormats;
+        return $results;
     }
 
-    public function getBestFormat(ServerRequestInterface $request): ?array
+    public function getBestFormat(ServerRequestInterface $request): ?string
     {
-        $format = $request->getAttribute('format') ?:
-            $this->detectFromExtension($request) ?:
-            $this->detectFromHeader($request)
-            ;
-
-        if ($format && isset($this->formats[$format])) {
-            return [$format, current($this->formats[$format])];
-        }
-
-        return null;
+        return $this->detectFromExtension($request) ?: $this->detectFromHeader($request);
     }
 
     /**
@@ -90,8 +97,9 @@ class FormatMatcher
     {
         $extension = strtolower(pathinfo($request->getUri()->getPath(), PATHINFO_EXTENSION));
 
-        return isset($this->formats[$extension]) ? $extension : null;
+        return $this->extensions[$extension] ?? null;
     }
+
 
     /**
      * Returns the format using the Accept header.
@@ -100,7 +108,6 @@ class FormatMatcher
     {
         $mimeTypes = array_keys($this->mimeTypes);
 
-        /** @var \Negotiation\Accept $accept */
         $accept = $this->negotiator->getBest(
             $request->getHeaderLine('Accept') ?: '*/*',
             $mimeTypes
@@ -110,15 +117,6 @@ class FormatMatcher
             return null;
         }
 
-        $mimeType = $accept->getType();
-
-        return $this->mimeTypes[$mimeType];
-    }
-
-    public static function fromExtension(string $extension): ?array
-    {
-        $extension = strtolower($extension);
-
-        return self::MIME_TYPES[$extension] ?? null;
+        return $this->mimeTypes[$accept->getType()];
     }
 }

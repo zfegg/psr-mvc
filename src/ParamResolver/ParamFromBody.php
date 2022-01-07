@@ -8,14 +8,14 @@ use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionParameter;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
 
 class ParamFromBody implements ParamResolverInterface
 {
-    private ?DenormalizerInterface $serializer;
-
-    public function __construct(?DenormalizerInterface $serializer = null)
-    {
-        $this->serializer = $serializer;
+    public function __construct(
+        private ParameterConverterInterface $parameterConverter,
+        private ?DenormalizerInterface $serializer = null
+    ) {
     }
 
     public function resolve(object $attr, ReflectionParameter $parameter): callable
@@ -38,7 +38,7 @@ class ParamFromBody implements ParamResolverInterface
                 );
             };
         } else {
-            $name = $attr->name ?? $parameter->getName();
+            $name = $attr->name ?? $this->parameterConverter->convertParamToRequestParam($parameter->getName());
             $default = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null;
 
             return $attr->root

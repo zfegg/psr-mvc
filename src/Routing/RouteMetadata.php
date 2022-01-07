@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Zfegg\PsrMvc\Route;
+namespace Zfegg\PsrMvc\Routing;
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -12,6 +12,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use RegexIterator;
 use Zfegg\PsrMvc\Attribute\Route;
+use Zfegg\PsrMvc\Attribute\RouteGroup;
 
 class RouteMetadata
 {
@@ -42,19 +43,35 @@ class RouteMetadata
      */
     private ?array $classNames = null;
 
+    /**
+     * @var array[]
+     */
+    private array $groups = [];
 
-    private ParameterTransformer $parameterTransformer;
+    private ParameterConverterInterface $parameterConverter;
 
+    /**
+     * @param string[] $paths
+     * @param string[] $excludePaths
+     * @param array[]  $groups
+     */
     public function __construct(
         array $paths = [],
         array $excludePaths = [],
         string $fileExtension = 'Controller.php',
-        ?ParameterTransformer $parameterTransformer = null,
+        array $groups = [],
+        ?ParameterConverterInterface $parameterConverter = null,
     ) {
         $this->addPaths($paths);
         $this->addExcludePaths($excludePaths);
         $this->fileExtension = $fileExtension;
-        $this->parameterTransformer = $parameterTransformer ?? new SlugifyParameterTransformer();
+        $this->parameterConverter = $parameterConverter ?? new SlugifyParameterConverter();
+        $this->groups = $groups;
+    }
+
+    public function addGroup(string $name, array $group): void
+    {
+        $this->groups[$name] = $group;
     }
 
     /**
@@ -179,7 +196,6 @@ class RouteMetadata
         return $classes;
     }
 
-
     /**
      * @return array[Route, [string, string]][]
      * @throws \ReflectionException
@@ -187,14 +203,26 @@ class RouteMetadata
     public function getRoutes(): array
     {
         $classes = $this->getAllClassNames();
-
         $baseRoutes = [];
         $routes = [];
+
         foreach ($classes as $className) {
             $ref = new ReflectionClass($className);
+            $routeToken = [];
+
+            /** @var RouteGroup $routeGroupAttr */
+            $routeGroupAttr = null;
+            foreach ($ref->getAttributes(RouteGroup::class) as $classAttrRef) {
+                $routeGroupAttr = $classAttrRef->newInstance();
+                break;
+            }
+
             foreach ($ref->getAttributes(Route::class) as $classAttrRef) {
                 $baseRoutes[] = $classAttrRef->newInstance();
             }
+
+            $routeToken['[controller]'] = $this->parameterConverter->convertClassNameToPath($className);
+
             foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 foreach ($method->getAttributes(Route::class, 2) as $methodAttrRef) {
                     /** @var Route $routeAttr */
@@ -202,17 +230,27 @@ class RouteMetadata
                     $routeAttr->options['controller'] = $className;
                     $routeAttr->options['action'] = $method->getName();
 
-                    $routeTokenReplace = $this->parameterTransformer->transform($className, $method->getName());
+                    $routeToken['[action]'] = $this->parameterConverter->convertMethodToPath($method->getName());
 
+                    $group = $this->groups[$routeGroupAttr?->name] ?? null;
                     if ($baseRoutes) {
                         foreach ($baseRoutes as $baseRoute) {
-                            $newRouteAttr = $this->mergeRoute($routeAttr, $baseRoute);
-                            $this->convertRouteToken($newRouteAttr, $routeTokenReplace);
-                            $routes[] = [$newRouteAttr, [$className, $method->getName()]];
+                            $newRouteAttr = $this->mergeRoute(
+                                $routeToken,
+                                $routeAttr,
+                                $baseRoute,
+                                $group,
+                            );
+                            $routes[] = [$newRouteAttr, [$className, $method->getName()], $group];
                         }
                     } else {
-                        $this->convertRouteToken($routeAttr, $routeTokenReplace);
-                        $routes[] = [$routeAttr, [$className, $method->getName()]];
+                        $newRouteAttr = $this->mergeRoute(
+                            $routeToken,
+                            $routeAttr,
+                            null,
+                            $group,
+                        );
+                        $routes[] = [$newRouteAttr, [$className, $method->getName()], $group];
                     }
                 }
             }
@@ -221,30 +259,43 @@ class RouteMetadata
         return $routes;
     }
 
-    private function mergeRoute(Route $route, Route $baseRoute): Route
-    {
+    private function mergeRoute(
+        array $replacePairs,
+        Route $route,
+        ?Route $baseRoute = null,
+        ?array $group = null
+    ): Route {
         $route = clone $route;
-        if (! $route->path) {
-            $route->path = $baseRoute->path;
-        } elseif ($route->path[0] != '/') {
-            $route->path = $baseRoute->path . '/' . $route->path;
+
+        if ($baseRoute) {
+            if (! $route->path) {
+                $route->path = $baseRoute->path;
+            } elseif ($route->path[0] != '/') {
+                $route->path = $baseRoute->path . '/' . $route->path;
+            }
+
+            $route->options = array_merge($baseRoute->options, $route->options);
+            $route->middlewares = array_merge($baseRoute->middlewares, $route->middlewares);
+
+            if (! $route->name && $baseRoute->name) {
+                $route->name = $baseRoute->name;
+            }
         }
 
-        $route->options = array_merge($baseRoute->options, $route->options);
-        $route->middlewares = array_merge($baseRoute->middlewares, $route->middlewares);
+        if ($group) {
+            $route->path = $group['prefix'] . $route->path;
+            $route->middlewares = array_merge($group['middlewares'], $route->middlewares);
 
-        if (! $route->name && $baseRoute->name) {
-            $route->name = $baseRoute->name;
+            if ($route->name && isset($group['name'])) {
+                $route->name = $group['name'] . $route->name;
+            }
         }
 
-        return $route;
-    }
-
-    private function convertRouteToken(Route $route, array $replacePairs): void
-    {
         if ($route->name !== null) {
             $route->name = strtr($route->name, $replacePairs);
         }
         $route->path = strtr($route->path, $replacePairs);
+
+        return $route;
     }
 }

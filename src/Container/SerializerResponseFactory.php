@@ -2,25 +2,22 @@
 
 declare(strict_types = 1);
 
-namespace Zfegg\PsrMvc\Middleware;
+namespace Zfegg\PsrMvc\Container;
 
-use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Zfegg\PsrMvc\FormatMatcher;
+use Zfegg\PsrMvc\PrepareResponse\SerializerResponse;
 
-class SerializerFactory implements FactoryInterface
+class SerializerResponseFactory
 {
-
-    /** @inheritdoc  */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container): SerializerResponse
     {
-        return new Serializer(
+        return new SerializerResponse(
             $container->get(FormatMatcher::class),
             $container->get(SerializerInterface::class),
             $container->get(ResponseFactoryInterface::class),
-            $options ?? [],
         );
     }
 }
