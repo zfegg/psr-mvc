@@ -18,6 +18,7 @@ use Zfegg\PsrMvc\Attribute\FromHeader;
 use Zfegg\PsrMvc\Attribute\FromQuery;
 use Zfegg\PsrMvc\Attribute\FromServer;
 use Zfegg\PsrMvc\Attribute\ParamResolverAttributeInterface;
+use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
 
 /**
  *
@@ -32,13 +33,21 @@ class ParamResolverManager extends AbstractPluginManager
     {
         $this->configure([
             'factories' => [
-                FromAttribute::class => static fn() => new ParamFromAttribute(),
-                FromQuery::class     => static fn() => new ParamFromQuery(),
-                FromBody::class      => static fn() => new ParamFromBody($container->get(Serializer::class)),
-                FromContainer::class => static fn() => new ParamFromContainer($container),
-                FromCookie::class    => static fn() => new ParamFromCookie(),
-                FromHeader::class    => static fn() => new ParamFromHeader(),
-                FromServer::class    => static fn() => new ParamFromServer(),
+                FromAttribute::class => static fn(ContainerInterface $container) =>
+                    new ParamFromAttribute($container->get(ParameterConverterInterface::class)),
+                FromQuery::class              => static fn(ContainerInterface $container) =>
+                    new ParamFromQuery($container->get(ParameterConverterInterface::class)),
+                FromBody::class               => static fn(ContainerInterface $container) =>
+                    new ParamFromBody(
+                        $container->get(ParameterConverterInterface::class),
+                        $container->get(Serializer::class)
+                    ),
+                FromContainer::class          => static fn(ContainerInterface $container) =>
+                    new ParamFromContainer($container),
+                FromCookie::class             => static fn(ContainerInterface $container) =>
+                    new ParamFromCookie($container->get(ParameterConverterInterface::class)),
+                FromHeader::class             => static fn() => new ParamFromHeader(),
+                FromServer::class             => static fn() => new ParamFromServer(),
             ]
         ]);
 

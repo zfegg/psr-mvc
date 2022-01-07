@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Zfegg\PsrMvc\Container;
 
 use Psr\Container\ContainerInterface;
-use Zfegg\PsrMvc\Route\RouteMetadata;
+use Zfegg\PsrMvc\Routing\RouteMetadata;
 
 class RouteMetadataFactory
 {
@@ -14,8 +14,8 @@ class RouteMetadataFactory
     {
         $config = $container->get('config')[RouteMetadata::class] ?? [];
 
-        if (isset($config['parameterTransformer']) && is_string($config['parameterTransformer'])) {
-            $config['parameterTransformer'] = $container->get($config['parameterTransformer']);
+        if (isset($config['parameterConverter']) && is_string($config['parameterConverter'])) {
+            $config['parameterConverter'] = $container->get($config['parameterConverter']);
         }
 
         return new RouteMetadata(...$config);

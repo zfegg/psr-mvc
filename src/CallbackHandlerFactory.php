@@ -9,29 +9,20 @@ use Psr\Container\ContainerInterface;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
-use Zfegg\PsrMvc\Attribute\Middleware;
+use Zfegg\PsrMvc\Attribute\PrepareResponse;
 use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
+use Zfegg\PsrMvc\PrepareResponse\PrepareResponseInterface;
 
 class CallbackHandlerFactory
 {
     public const DEFAULT_SEPARATOR = '@';
 
-    private ContainerInterface $container;
-
-    private string $separator;
-    private array $defaultMiddlewares;
-    private ParamResolverManager $manager;
-
     public function __construct(
-        ContainerInterface $container,
-        ParamResolverManager $paramResolverManager,
-        array $defaultMiddlewares = [],
-        string $separator = self::DEFAULT_SEPARATOR,
+        private ContainerInterface $container,
+        private ParamResolverManager $paramResolverManager,
+        private PrepareResponseInterface $defaultPrepareResponse,
+        private string $separator = self::DEFAULT_SEPARATOR,
     ) {
-        $this->container = $container;
-        $this->separator = $separator;
-        $this->defaultMiddlewares = $defaultMiddlewares;
-        $this->manager = $paramResolverManager;
     }
 
     public function getSeparator(): string
@@ -69,18 +60,6 @@ class CallbackHandlerFactory
         return $callback;
     }
 
-    private function initMiddleware(ReflectionFunctionAbstract $ref): array
-    {
-        $middlewares = [];
-        foreach ($ref->getAttributes(Middleware::class) as $refAttr) {
-            $attr = $refAttr->newInstance();
-
-            $middlewares[] = $this->container->get($attr->name, $attr->options);
-        }
-
-        return $middlewares ?: $this->defaultMiddlewares;
-    }
-
     /**
      * Create CallableHandlerDecorator by callable or action.
      */
@@ -91,15 +70,30 @@ class CallbackHandlerFactory
 
         $paramResolvers = [];
         foreach ($reflector->getParameters() as $parameter) {
-            $paramResolvers[$parameter->getName()] = $this->manager->resolver($parameter);
+            $paramResolvers[$parameter->getName()] = $this->paramResolverManager->resolver($parameter);
         }
 
-        return new CallbackHandler($callback, $paramResolvers, $this->initMiddleware($reflector));
+        // Set prepare response.
+        $prepareResponse = $this->defaultPrepareResponse;
+        $options = [];
+        foreach ($reflector->getAttributes(PrepareResponse::class) as $refAttr) {
+            /** @var PrepareResponse $attr */
+            $attr = $refAttr->newInstance();
+            $prepareResponse = $this->container->get($attr->name);
+            $options = $attr->options;
+        }
+
+        return new CallbackHandler(
+            $callback,
+            $paramResolvers,
+            $prepareResponse,
+            $options
+        );
     }
 
-    public function exists(string $action): bool
+    public function exists(string $callback): bool
     {
-        [$class, $method] = explode($this->separator, $action) + ['', ''];
+        [$class, $method] = explode($this->separator, $callback) + ['', ''];
 
         return method_exists($class, $method) && $this->container->has($class);
     }

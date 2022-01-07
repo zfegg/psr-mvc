@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace ZfeggTest\PsrMvc\Example;
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Zfegg\PsrMvc\Attribute\FromAttribute;
 use Zfegg\PsrMvc\Attribute\FromBody;
@@ -19,13 +20,58 @@ use Zfegg\PsrMvc\Attribute\HttpHead;
 use Zfegg\PsrMvc\Attribute\HttpPatch;
 use Zfegg\PsrMvc\Attribute\HttpPost;
 use Zfegg\PsrMvc\Attribute\HttpPut;
-use Zfegg\PsrMvc\Attribute\Middleware;
+use Zfegg\PsrMvc\Attribute\PrepareResponse;
 use Zfegg\PsrMvc\Attribute\Route;
-use Zfegg\PsrMvc\Middleware\JsonSerializer;
+use Zfegg\PsrMvc\Attribute\RouteGroup;
+use Zfegg\PsrMvc\Middleware\ContentTypeMiddleware;
+use Zfegg\PsrMvc\PrepareResponse\DefaultResponse;
+use Zfegg\PsrMvc\PrepareResponse\SerializerResponse;
+use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
 
+#[RouteGroup('test')]
 #[Route('/[controller]/[action]')]
 class MvcExampleController
 {
+
+    public function home(
+        #[FromQuery]
+        int $pageSize,
+        #[FromBody]
+        int $body,
+        #[FromContainer]
+        ParameterConverterInterface $converter
+    ): void {
+        Assert::assertEquals(123, $pageSize);
+        Assert::assertEquals(456, $body);
+    }
+
+    public function fooBar(string $action): void
+    {
+        Assert::assertEquals('foo-bar', $action);
+    }
+
+    #[HttpGet(middlewares: [ContentTypeMiddleware::class])]
+    public function middleware(): void
+    {
+    }
+
+    #[PrepareResponse(DefaultResponse::class)]
+    public function defaultHtmlResponse(): string
+    {
+        return 'test';
+    }
+
+    #[PrepareResponse(DefaultResponse::class)]
+    public function defaultJsonResponse(): array
+    {
+        return ['test'];
+    }
+
+    #[PrepareResponse(SerializerResponse::class)]
+    public function serializeResult(): array
+    {
+        return ['test'];
+    }
 
     #[HttpPost]
     public function post(
@@ -56,8 +102,7 @@ class MvcExampleController
     {
     }
 
-    #[HttpGet('{id}')]
-    #[Middleware(JsonSerializer::class)]
+    #[HttpGet('{id}', name: 'get')]
     public function get(
         #[FromAttribute]
         int $id,

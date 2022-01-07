@@ -13,9 +13,8 @@ class FormatMatcherFactory
 
     public function __invoke(ContainerInterface $container): FormatMatcher
     {
-        $formats = $container->get('config')[FormatMatcher::class] ?? FormatMatcher::MIME_TYPES;
+        $formats = $container->get('config')[FormatMatcher::class]['formats'] ?? null;
         return new FormatMatcher(
-            $container->get(Negotiator::class),
             $formats,
         );
     }

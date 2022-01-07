@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types = 1);
-
-namespace Zfegg\PsrMvc\Middleware;
+namespace Zfegg\PsrMvc\PrepareResponse;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -10,42 +8,35 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Zfegg\PsrMvc\FormatMatcher;
 
-class Serializer implements MiddlewareInterface
+class SerializerResponse implements PrepareResponseInterface
 {
+    use DefaultPrepareTrait;
 
     public function __construct(
         private FormatMatcher $matcher,
         private SerializerInterface $serializer,
         private ResponseFactoryInterface $responseFactory,
-        private array $context = [],
     ) {
     }
 
-    public function process(ServerRequestInterface $request, callable $next): ResponseInterface
+    public function prepare(ServerRequestInterface $request, mixed $result, array $options = []): ResponseInterface
     {
-        [$format, $mimeType] = $this->matcher->getBestFormat($request) ?? [null, null];
-
-        if (! $format) {
-            return $this->responseFactory->createResponse(406);
+        if ($response = $this->defaultPrepare($result)) {
+            return $response;
         }
 
-        $result = $next();
+        $format = $request->getAttribute('format')
+            ?: $this->matcher->getBestFormat($request)
+            ?: $this->matcher->getDefaultFormat();
 
-        if ($result instanceof ResponseInterface) {
-            return $result;
-        }
-
-        if ($result === null) {
-            return $this->responseFactory->createResponse(204);
-        }
-
+        $mimeType = $this->matcher->getFormat($format)['mime-type'][0];
         $response = $this->responseFactory->createResponse();
         $response = $response->withHeader('Content-Type', $mimeType);
         $response->getBody()->write(
             $this->serializer->serialize(
                 $result,
                 $format,
-                $this->context
+                $options
             )
         );
         return $response;

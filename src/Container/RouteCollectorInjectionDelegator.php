@@ -10,7 +10,7 @@ use Mezzio\MiddlewareFactory;
 use Mezzio\Router\RouteCollectorInterface;
 use Zfegg\PsrMvc\CallbackHandlerFactory;
 use Zfegg\PsrMvc\LazyCallbackHandler;
-use Zfegg\PsrMvc\Route\RouteMetadata;
+use Zfegg\PsrMvc\Routing\RouteMetadata;
 
 class RouteCollectorInjectionDelegator implements DelegatorFactoryInterface
 {
