@@ -2,7 +2,7 @@ PSR MVC handler
 ================
 
 [![GitHub Actions: Run tests](https://github.com/zfegg/psr-mvc/workflows/qa/badge.svg)](https://github.com/zfegg/psr-mvc/actions?query=workflow%3A%22qa%22)
-[![Coverage Status](https://coveralls.io/repos/github/zfegg/psr-mvc/badge.svg?branch=master)](https://coveralls.io/github/zfegg/psr-mvc?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/zfegg/psr-mvc/badge.svg?branch=main)](https://coveralls.io/github/zfegg/psr-mvc?branch=main)
 [![Latest Stable Version](https://poser.pugx.org/zfegg/psr-mvc/v/stable.png)](https://packagist.org/packages/zfegg/psr-mvc)
 
 Using MVC for PSR applications, like [dotnet core MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-6.0).

@@ -34,7 +34,7 @@
         "zfegg/expressive-test": "^0.6.1"
     },
     "suggest": {
-        "symfony/serializer": "Auto serialize required."
+        "symfony/serializer": "Serialize action result required."
     },
     "autoload": {
         "psr-4": {
