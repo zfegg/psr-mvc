@@ -12,6 +12,6 @@ class AccessDeniedHttpException extends HttpException
         ?int $code = null,
         array $headers = []
     ) {
-        parent::__construct(403, $message, $previous, $headers);
+        parent::__construct(403, $message, $previous, $headers, $code);
     }
 }
