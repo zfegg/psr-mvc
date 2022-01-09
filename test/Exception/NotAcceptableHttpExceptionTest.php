@@ -12,7 +12,7 @@ class NotAcceptableHttpExceptionTest extends HttpExceptionTest
     protected function createException(
         string $message = '',
         ?\Throwable $previous = null,
-        int $code = 0,
+        ?int $code = null,
         array $headers = []
     ): HttpException {
         return new NotAcceptableHttpException($message, $previous, $code, $headers);

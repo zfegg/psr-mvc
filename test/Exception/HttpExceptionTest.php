@@ -26,6 +26,7 @@ class HttpExceptionTest extends TestCase
     public function testHeadersDefault(): void
     {
         $exception = $this->createException();
+        $this->assertEquals($exception->getStatusCode(), $exception->getCode());
         $this->assertSame([], $exception->getHeaders());
     }
 
@@ -59,7 +60,7 @@ class HttpExceptionTest extends TestCase
     protected function createException(
         string $message = '',
         ?\Throwable $previous = null,
-        int $code = 0,
+        ?int $code = null,
         array $headers = []
     ): HttpException {
         return new HttpException(200, $message, $previous, $headers, $code);
