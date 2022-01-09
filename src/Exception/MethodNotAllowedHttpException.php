@@ -10,7 +10,7 @@ class MethodNotAllowedHttpException extends HttpException
         array $allow,
         ?string $message = '',
         ?\Throwable $previous = null,
-        ?int $code = 0,
+        ?int $code = null,
         array $headers = []
     ) {
         $headers['Allow'] = strtoupper(implode(', ', $allow));

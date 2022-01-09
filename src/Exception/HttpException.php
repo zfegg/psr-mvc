@@ -14,12 +14,12 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
         ?string $message = '',
         ?\Throwable $previous = null,
         array $headers = [],
-        ?int $code = 0
+        ?int $code = null
     ) {
         $this->statusCode = $statusCode;
         $this->headers = $headers;
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code ?? $statusCode, $previous);
     }
 
     public function getStatusCode(): int

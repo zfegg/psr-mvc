@@ -16,7 +16,7 @@ class UnauthorizedHttpException extends HttpException
         string $challenge,
         ?string $message = '',
         ?\Throwable $previous = null,
-        ?int $code = 0,
+        ?int $code = null,
         array $headers = []
     ) {
         $headers['WWW-Authenticate'] = $challenge;
