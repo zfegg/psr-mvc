@@ -9,7 +9,7 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="App\\Tests">
+        <testsuite name="ZfeggTest\\PsrMvc">
             <directory>./test</directory>
         </testsuite>
     </testsuites>
