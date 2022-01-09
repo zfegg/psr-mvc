@@ -12,10 +12,8 @@ use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
@@ -24,10 +22,10 @@ use Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Zfegg\ExpressiveTest\AbstractActionTestCase;
 use Zfegg\ExpressiveTest\PassMiddleware;
 use Zfegg\PsrMvc\ConfigProvider;
 use Zfegg\PsrMvc\Routing\RouteMetadata;
-use Zfegg\ExpressiveTest\AbstractActionTestCase;
 
 abstract class AbstractTestCase extends AbstractActionTestCase
 {
@@ -69,7 +67,6 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                                     new CsvEncoder(),
                                 ]
                             ),
-                            CacheItemPoolInterface::class => new ArrayAdapter(),
                             ResponseFactoryInterface::class => new ResponseFactory(),
                             'foo' => 'foo-value',
                             'middleware1' => new PassMiddleware(),
