@@ -203,11 +203,11 @@ class RouteMetadata
     public function getRoutes(): array
     {
         $classes = $this->getAllClassNames();
-        $baseRoutes = [];
         $routes = [];
 
         foreach ($classes as $className) {
             $ref = new ReflectionClass($className);
+            $baseRoutes = [];
             $routeToken = [];
 
             /** @var RouteGroup $routeGroupAttr */
