@@ -20,9 +20,9 @@ class SerializerResponseTest extends AbstractTestCase
             ]);
 
         $this->get('/example/serialize-result', [])
-            ->assertSuccessful()
+            ->assertCreated()
+            ->assertHeader('X-Foo', 'foo')
             ->assertJson(['test']);
-
 
         $this->get('/example/serializer-response-assert-returned', ['Accept' => 'invalid/mime-type'])
             ->assertNoContent();

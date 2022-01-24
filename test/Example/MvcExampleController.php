@@ -67,7 +67,7 @@ class MvcExampleController
         return ['test'];
     }
 
-    #[PrepareResponse(SerializerResponse::class)]
+    #[PrepareResponse(SerializerResponse::class, ['status' => 201, 'headers' => ['X-Foo' => 'foo']])]
     public function serializeResult(): array
     {
         return ['test'];
