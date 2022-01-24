@@ -32,8 +32,13 @@ class SerializerResponse implements PrepareResponseInterface
             ?: $this->matcher->getDefaultFormat();
 
         $mimeType = $this->matcher->getFormat($format)['mime-type'][0];
-        $response = $this->responseFactory->createResponse();
+        $response = $this->responseFactory->createResponse($options['status'] ?? 200);
         $response = $response->withHeader('Content-Type', $mimeType);
+
+        foreach ($options['headers'] ?? [] as $name => $header) {
+            $response = $response->withHeader($name, $header);
+        }
+
         $response->getBody()->write(
             $this->serializer->serialize(
                 $result,

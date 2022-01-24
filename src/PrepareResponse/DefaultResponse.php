@@ -19,13 +19,13 @@ class DefaultResponse implements PrepareResponseInterface
         }
 
         if ($result === null) {
-            return new EmptyResponse(204);
+            return new EmptyResponse(204, $options['headers'] ?? []);
         }
 
         if (is_string($result)) {
-            return new HtmlResponse($result);
+            return new HtmlResponse($result, $options['status'] ?? 200, $options['headers'] ?? []);
         } else {
-            return new JsonResponse($result);
+            return new JsonResponse($result, $options['status'] ?? 200, $options['headers'] ?? []);
         }
     }
 }
