@@ -7,7 +7,7 @@ namespace Zfegg\PsrMvc\Container;
 use Psr\Container\ContainerInterface;
 use Zfegg\PsrMvc\CallbackHandlerFactory;
 use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
-use Zfegg\PsrMvc\PrepareResponse\PrepareResponseInterface;
+use Zfegg\PsrMvc\Preparer\ResultPreparableInterface;
 
 class CallbackHandlerFactoryFactory
 {
@@ -18,7 +18,7 @@ class CallbackHandlerFactoryFactory
         return new CallbackHandlerFactory(
             $container,
             $container->get(ParamResolverManager::class),
-            $container->get(PrepareResponseInterface::class),
+            $container->get(ResultPreparableInterface::class),
             ...$config,
         );
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Zfegg\PsrMvc\PrepareResponse;
+namespace Zfegg\PsrMvc\Preparer;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -10,9 +10,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Zfegg\PsrMvc\FormatMatcher;
 
-class SerializerResponse implements PrepareResponseInterface
+class SerializationPreparer implements ResultPreparableInterface
 {
-    use DefaultPrepareTrait;
+    use DefaultPreparableTrait;
 
     public function __construct(
         private FormatMatcher $matcher,

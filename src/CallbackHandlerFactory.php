@@ -9,9 +9,9 @@ use Psr\Container\ContainerInterface;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
-use Zfegg\PsrMvc\Attribute\PrepareResponse;
+use Zfegg\PsrMvc\Attribute\PrepareResult;
 use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
-use Zfegg\PsrMvc\PrepareResponse\PrepareResponseInterface;
+use Zfegg\PsrMvc\Preparer\ResultPreparableInterface;
 
 class CallbackHandlerFactory
 {
@@ -20,7 +20,7 @@ class CallbackHandlerFactory
     public function __construct(
         private ContainerInterface $container,
         private ParamResolverManager $paramResolverManager,
-        private PrepareResponseInterface $defaultPrepareResponse,
+        private ResultPreparableInterface $defaultPrepareResponse,
         private string $separator = self::DEFAULT_SEPARATOR,
     ) {
     }
@@ -76,8 +76,8 @@ class CallbackHandlerFactory
         // Set prepare response.
         $prepareResponse = $this->defaultPrepareResponse;
         $options = [];
-        foreach ($reflector->getAttributes(PrepareResponse::class) as $refAttr) {
-            /** @var PrepareResponse $attr */
+        foreach ($reflector->getAttributes(PrepareResult::class) as $refAttr) {
+            /** @var PrepareResult $attr */
             $attr = $refAttr->newInstance();
             $prepareResponse = $this->container->get($attr->name);
             $options = $attr->options;

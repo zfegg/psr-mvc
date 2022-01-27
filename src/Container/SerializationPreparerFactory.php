@@ -8,13 +8,13 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Zfegg\PsrMvc\FormatMatcher;
-use Zfegg\PsrMvc\PrepareResponse\SerializerResponse;
+use Zfegg\PsrMvc\Preparer\SerializationPreparer;
 
-class SerializerResponseFactory
+class SerializationPreparerFactory
 {
-    public function __invoke(ContainerInterface $container): SerializerResponse
+    public function __invoke(ContainerInterface $container): SerializationPreparer
     {
-        return new SerializerResponse(
+        return new SerializationPreparer(
             $container->get(FormatMatcher::class),
             $container->get(SerializerInterface::class),
             $container->get(ResponseFactoryInterface::class),
