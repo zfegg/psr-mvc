@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace ZfeggTest\PsrMvc\PrepareResponse;
+namespace ZfeggTest\PsrMvc\Response;
 
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;

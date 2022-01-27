@@ -7,7 +7,7 @@ namespace Zfegg\PsrMvc;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zfegg\PsrMvc\PrepareResponse\PrepareResponseInterface;
+use Zfegg\PsrMvc\Preparer\ResultPreparableInterface;
 
 class CallbackHandler implements RequestHandlerInterface
 {
@@ -20,7 +20,7 @@ class CallbackHandler implements RequestHandlerInterface
         callable $callback,
         /** @var callable[] */
         private array $paramResolvers,
-        private PrepareResponseInterface $prepareResponse,
+        private ResultPreparableInterface $prepareResponse,
         private array $options = []
     ) {
         $this->callback = $callback;

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace ZfeggTest\PsrMvc\PrepareResponse;
+namespace ZfeggTest\PsrMvc\Response;
 
 use Mezzio\Application;
 use Zfegg\PsrMvc\ControllerHandler;

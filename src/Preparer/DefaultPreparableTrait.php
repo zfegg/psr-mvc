@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Zfegg\PsrMvc\PrepareResponse;
+namespace Zfegg\PsrMvc\Preparer;
 
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * @property \Psr\Http\Message\ResponseFactoryInterface $responseFactory
  */
-trait DefaultPrepareTrait
+trait DefaultPreparableTrait
 {
 
     private function defaultPrepare(mixed $result): ?ResponseInterface

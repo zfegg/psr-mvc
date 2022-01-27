@@ -8,9 +8,9 @@ use Mezzio\Router\RouteCollector;
 use Zfegg\PsrMvc\Container\RouteCollectorInjectionDelegator;
 use Zfegg\PsrMvc\Middleware\ContentTypeMiddleware;
 use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
-use Zfegg\PsrMvc\PrepareResponse\DefaultResponse;
-use Zfegg\PsrMvc\PrepareResponse\PrepareResponseInterface;
-use Zfegg\PsrMvc\PrepareResponse\SerializerResponse;
+use Zfegg\PsrMvc\Preparer\DefaultPreparer;
+use Zfegg\PsrMvc\Preparer\ResultPreparableInterface;
+use Zfegg\PsrMvc\Preparer\SerializationPreparer;
 use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
 use Zfegg\PsrMvc\Routing\RouteMetadata;
 use Zfegg\PsrMvc\Routing\SlugifyParameterConverter;
@@ -29,8 +29,8 @@ class ConfigProvider
                     ParamResolverManager::class      => Container\ParamResolverManagerFactory::class,
                     ControllerHandler::class         => Container\ControllerHandlerFactory::class,
                     SlugifyParameterConverter::class => Container\SlugifyParameterConverterFactory::class,
-                    DefaultResponse::class           => Container\DefaultResponseFactory::class,
-                    SerializerResponse::class        => Container\SerializerResponseFactory::class,
+                    DefaultPreparer::class           => Container\DefaultPreparerFactory::class,
+                    SerializationPreparer::class     => Container\SerializationPreparerFactory::class,
                     ContentTypeMiddleware::class     => Container\ContentTypeMiddlewareFactory::class,
                 ],
                 'delegators' => [
@@ -40,7 +40,7 @@ class ConfigProvider
                 ],
                 'aliases'    => [
                     ParameterConverterInterface::class => SlugifyParameterConverter::class,
-                    PrepareResponseInterface::class => DefaultResponse::class,
+                    ResultPreparableInterface::class   => DefaultPreparer::class,
                 ]
             ],
             RouteMetadata::class          => [

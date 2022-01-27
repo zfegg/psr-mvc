@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Zfegg\PsrMvc\PrepareResponse;
+namespace Zfegg\PsrMvc\Preparer;
 
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -10,7 +10,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DefaultResponse implements PrepareResponseInterface
+class DefaultPreparer implements ResultPreparableInterface
 {
     public function prepare(ServerRequestInterface $request, mixed $result, array $options = []): ResponseInterface
     {

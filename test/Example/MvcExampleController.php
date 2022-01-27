@@ -20,12 +20,12 @@ use Zfegg\PsrMvc\Attribute\HttpHead;
 use Zfegg\PsrMvc\Attribute\HttpPatch;
 use Zfegg\PsrMvc\Attribute\HttpPost;
 use Zfegg\PsrMvc\Attribute\HttpPut;
-use Zfegg\PsrMvc\Attribute\PrepareResponse;
+use Zfegg\PsrMvc\Attribute\PrepareResult;
 use Zfegg\PsrMvc\Attribute\Route;
 use Zfegg\PsrMvc\Attribute\RouteGroup;
 use Zfegg\PsrMvc\Middleware\ContentTypeMiddleware;
-use Zfegg\PsrMvc\PrepareResponse\DefaultResponse;
-use Zfegg\PsrMvc\PrepareResponse\SerializerResponse;
+use Zfegg\PsrMvc\Preparer\DefaultPreparer;
+use Zfegg\PsrMvc\Preparer\SerializationPreparer;
 use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
 
 #[RouteGroup('test')]
@@ -55,32 +55,32 @@ class MvcExampleController
     {
     }
 
-    #[PrepareResponse(DefaultResponse::class)]
+    #[PrepareResult(DefaultPreparer::class)]
     public function defaultHtmlResponse(): string
     {
         return 'test';
     }
 
-    #[PrepareResponse(DefaultResponse::class)]
+    #[PrepareResult(DefaultPreparer::class)]
     public function defaultJsonResponse(): array
     {
         return ['test'];
     }
 
-    #[PrepareResponse(SerializerResponse::class, ['status' => 201, 'headers' => ['X-Foo' => 'foo']])]
+    #[PrepareResult(SerializationPreparer::class, ['status' => 201, 'headers' => ['X-Foo' => 'foo']])]
     public function serializeResult(): array
     {
         return ['test'];
     }
 
-    #[PrepareResponse(SerializerResponse::class)]
+    #[PrepareResult(SerializationPreparer::class)]
     public function serializerResponseAssertReturned(): EmptyResponse
     {
         return new EmptyResponse();
     }
 
 
-    #[PrepareResponse(SerializerResponse::class)]
+    #[PrepareResult(SerializationPreparer::class)]
     public function serializerResponseAssertVoid(): void
     {
     }
