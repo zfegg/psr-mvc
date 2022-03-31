@@ -19,5 +19,8 @@ class SlugifyParameterTransformerTest extends TestCase
 
         $result = $transformer->convertMethodToPath('getList');
         $this->assertEquals('get-list', $result);
+
+        $this->assertEquals('getList', $transformer->convertActionToMethod('get-list'));
+        $this->assertEquals('user_id', $transformer->convertParamToRequestParam('userId'));
     }
 }

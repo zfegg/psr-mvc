@@ -17,6 +17,8 @@ class RouteMetadataTest extends AbstractTestCase
         $routeMetadata = $this->container->get(RouteMetadata::class);
         $routeMetadata->addGroup('foo', ['prefix' => '/foo']);
         $routeMetadata->setFileExtension('Controller.php');
+        $this->assertCount(1, $routeMetadata->getPaths());
+        $this->assertEquals('Controller.php', $routeMetadata->getFileExtension());
         $classes = $routeMetadata->getAllClassNames();
 
         $this->assertEquals(

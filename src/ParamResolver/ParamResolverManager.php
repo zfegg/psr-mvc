@@ -40,7 +40,7 @@ class ParamResolverManager extends AbstractPluginManager
                 FromBody::class               => static fn(ContainerInterface $container) =>
                     new ParamFromBody(
                         $container->get(ParameterConverterInterface::class),
-                        $container->get(Serializer::class)
+                        $container->has(Serializer::class) ? $container->get(Serializer::class) : null
                     ),
                 FromContainer::class          => static fn(ContainerInterface $container) =>
                     new ParamFromContainer($container),
