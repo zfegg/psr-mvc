@@ -267,13 +267,8 @@ class RouteMetadata
     ): Route {
         $route = clone $route;
 
-        if ($baseRoute) {
-            if (! $route->path) {
-                $route->path = $baseRoute->path;
-            } elseif ($route->path[0] != '/') {
-                $route->path = $baseRoute->path . '/' . $route->path;
-            }
-
+        if ($baseRoute && ! str_starts_with($route->path, '/')) {
+            $route->path = $baseRoute->path . '/' . $route->path;
             $route->options = array_merge($baseRoute->options, $route->options);
             $route->middlewares = array_merge($baseRoute->middlewares, $route->middlewares);
 
