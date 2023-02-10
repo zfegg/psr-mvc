@@ -37,12 +37,12 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
+      - name: Run Tests
+        run: ./vendor/bin/phpunit --coverage-text
+
       - name: CS Check
         if: ${{ matrix.php-versions == '8.0' }}
         run: ./vendor/bin/phpcs
-
-      - name: Run Tests
-        run: ./vendor/bin/phpunit --coverage-text
 
       - name: Upload coverage to coveralls.io
         if: ${{ matrix.php-versions == '8.0' }}

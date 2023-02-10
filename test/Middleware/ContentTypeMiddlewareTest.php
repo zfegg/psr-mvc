@@ -15,7 +15,7 @@ class ContentTypeMiddlewareTest extends AbstractTestCase
         $this->get('/api/mvc-example/middleware', ['Accept' => 'invalid type'])
             ->assertStatus(406);
 
-        $this->get('/api/mvc-example/middleware')
+        $this->get('/api/mvc-example/middleware', ['Accept' => '*/*'])
             ->assertNoContent();
     }
 }

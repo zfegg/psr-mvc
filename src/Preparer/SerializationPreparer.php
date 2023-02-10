@@ -12,8 +12,6 @@ use Zfegg\PsrMvc\FormatMatcher;
 
 class SerializationPreparer implements ResultPreparableInterface
 {
-    use DefaultPreparableTrait;
-
     public function __construct(
         private FormatMatcher $matcher,
         private SerializerInterface $serializer,
@@ -23,10 +21,6 @@ class SerializationPreparer implements ResultPreparableInterface
 
     public function prepare(ServerRequestInterface $request, mixed $result, array $options = []): ResponseInterface
     {
-        if ($response = $this->defaultPrepare($result)) {
-            return $response;
-        }
-
         $format = $request->getAttribute('format')
             ?: $this->matcher->getBestFormat($request)
             ?: $this->matcher->getDefaultFormat();
@@ -47,5 +41,10 @@ class SerializationPreparer implements ResultPreparableInterface
             )
         );
         return $response;
+    }
+
+    public function supportsPreparation(ServerRequestInterface $request, mixed $result, array $options = []): bool
+    {
+        return is_object($result) || is_iterable($result);
     }
 }

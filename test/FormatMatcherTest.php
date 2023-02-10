@@ -21,6 +21,7 @@ class FormatMatcherTest extends TestCase
         $format = $matcher->getBestFormat($req);
         $contentType = $matcher->getFormat($format)['mime-type'][0];
 
+        $this->assertEquals('json', $matcher->getDefaultFormat());
         $this->assertEquals('json', $format);
         $this->assertEquals('application/json', $contentType);
     }

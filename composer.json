@@ -44,7 +44,10 @@
     "autoload-dev": {
         "psr-4": {
             "ZfeggTest\\PsrMvc\\" : "test/"
-        }
+        },
+        "files": [
+            "test/TestAsset/HeadersSent.php"
+        ]
     },
     "scripts": {
         "cs-check": "phpcs",
@@ -58,6 +61,9 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

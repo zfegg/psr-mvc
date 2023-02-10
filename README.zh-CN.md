@@ -1,30 +1,30 @@
-English | [简体中文](README.zh-CN.md)
+[English](README.md) | 简体中文
 
-PSR MVC handler
+PSR MVC 处理器
 ================
 
 [![GitHub Actions: Run tests](https://github.com/zfegg/psr-mvc/workflows/qa/badge.svg)](https://github.com/zfegg/psr-mvc/actions?query=workflow%3A%22qa%22)
 [![Coverage Status](https://coveralls.io/repos/github/zfegg/psr-mvc/badge.svg?branch=main)](https://coveralls.io/github/zfegg/psr-mvc?branch=main)
 [![Latest Stable Version](https://poser.pugx.org/zfegg/psr-mvc/v/stable.png)](https://packagist.org/packages/zfegg/psr-mvc)
 
-Using MVC style for PSR handler applications, like [dotnet core MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-6.0).  
-Using the PHP attributes (annotations), convert the controller to PSR15 `RequestHandlerInterface` object.
+在PSR处理器的应用程序中使用MVC风格, 类似 [dotnet core MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-6.0).  
+使用PHP属性(注解), 将控制器转换成 PSR15 `RequestHandlerInterface` 对象.
 
-Installation
-------------
+安装
+---
 
 ```bash
 composer require zfegg/psr-mvc
 ```
 
-Usage
-------
+使用
+---
 
-Attributes usage like [dotnet core MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-6.0)
+属性的使用类似 [dotnet core MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-6.0)
 
-### MVC Route
+### MVC 路由
 
-#### Getting started with Mezzio
+#### 开始在 Mezzio 中使用
 
 ```php
 
@@ -40,10 +40,11 @@ new ConfigAggregator([
 
 // config/autoload/global.php
 use Zfegg\PsrMvc\Container\HandlerFactory;
+use Zfegg\PsrMvc\Routing\RouteMetadata;
 
 return [
-    // Add scan controllers paths
-    \Zfegg\PsrMvc\Routing\RouteMetadata::class => [
+    // 添加扫描控制器目录
+    RouteMetadata::class => [
         'paths' => ['path/to/Controller'],
     ]
 ];
@@ -70,9 +71,9 @@ public class HomeController
 
 ```
 
-#### Attributes
+#### PHP 8 属性
 
-<!-- 支持的方法属性列表 -->
+支持的方法属性列表
 
 - `Route(string $path, array $middlewares = [], ?string $name = null, array $options = [], ?array $methods = null)`
 - `HttpGet(string $path, array $middlewares = [], ?string $name = null, array $options = [])`
@@ -82,49 +83,26 @@ public class HomeController
 - `HttpDelete(string $path, array $middlewares = [], ?string $name = null, array $options = [])`
 - `HttpHead(string $path, array $middlewares = [], ?string $name = null, array $options = [])`
 
-Register routes by PHP attributes.
+
+#### 路由结合
+
+使用 `[controller]`, `[action]` 自动识别控制器和动作
 
 ```php
-return [
-  RouteMetadata::class => [
-    // Scan controller paths.
-    'paths' => [
-       'path/Controller',
-    ],
-  ],
-]
-```
-
-The following code applies `#[Route("/[controller]/[action]")]` to the controller:
-
-```php
-
+#[Route("/[controller]/[action]")]
 public class HomeController
 {
-    #[Route("/")]
-    #[Route("/home")]
-    #[Route("/home/index")]
-    #[Route("/home/index/{id?}")]
-    public index(?int $id)
-    {
-        return new HtmlResponse();
-    }
-
-    #[Route("/home/about")]
-    #[Route("/home/about/{id}")]
-    public about(?int $id)
-    {
-        return new HtmlResponse();
-    }
+    #[HttpGet]  // GET /home/index
+    public index(){}
 }
 ```
 
-#### Combining attribute routes
+Restful 风格示例
 
 ```php
 use Psr\Http\Message\ResponseInterface;
 
-#[Route("/api/[controller]")] // Route prefix `/api/products`
+#[Route("/api/[controller]")] // 路由前缀 `/api/products`
 class ProductsController {
 
     #[HttpGet]   // GET /api/products
@@ -148,22 +126,22 @@ class ProductsController {
 ```
 
 
-### Wrap controller handler
+### 包装控制器处理程序
 
-#### Using param attributes
+#### 使用参数属性
 
 - `FromAttribute(?string $name = null)`
-    - `$name` default is the parameter name
+  - `$name` default is the parameter name
 - `FromBody(?string $name = null, ?bool $root = false, array $serializerContext = [])`
-    - `$name` default is the parameter name
+  - `$name` default is the parameter name
 - `FromContainer(?string $name = null)`
-    - `$name` default is the parameter type
+  - `$name` default is the parameter type
 - `FromCookie(?string $name = null)`
-    - `$name` default is the parameter name
+  - `$name` default is the parameter name
 - `FromHeader(?string $name = null)`
-    - `$name` default is the parameter name
+  - `$name` default is the parameter name
 - `FromQuery(?string $name = null)`
-    - `$name` default is the parameter name
+  - `$name` default is the parameter name
 - `FromServer(string $name)`
 
 ```php
@@ -177,7 +155,6 @@ Cookie: PHPSESSION=xxx
 
 name=foo
 */
-
 class ExampleController {
     #[HttpPost('/api/[controller]/[action]')] 
     public function post(
@@ -210,29 +187,31 @@ class ExampleController {
 
 ```
 
-#### Default param bindings
+#### 默认参数绑定
 
 ```php
 
 class ExampleController {
     #[HttpPost('/api/[controller]/[action]/{id}')] 
     public function hello(
-       ServerRequestInterface $request,  // Default bind `$request`.
-       int $id,    // Default bind `$request->getAttribute('id')`.
-       Foo $foo,   // If container exists the `Foo`, default bind `$container->get('id')`.
-       Bar $bar,   // Default bind `$request->getAttribute(Bar::class, $request->getAttribute('bar'))`.
-    ): void {
-    }
+       ServerRequestInterface $request,  // 默认绑定请求来源的 `ServerRequestInterface` 对象.
+       int $id,        // 默认绑定 `$request->getAttribute('id')`.
+       Foo $fooName,   // 如果IoC容器中存在 `Foo`, 默认取容器中的对象, 否则从获取.
+                       // ```
+                       // $value = $request->getAttribute(Foo::class, $request->getAttribute('fooName'));
+                       // $value = $value === null && $container->has(Foo::class) ? container->get(Foo::class) : $value;
+                       // ```
+    ): void {}
 }
 ```
 
-### Prepare result to PSR response.
+### 返回结果预处理
 
-Resolves various types of method results convert to 'Psr\Http\Message\ResponseInterface'.
-For resolve callback result to ResponseInterface.
+解决各种类型的方法结果转换为 'Psr\Http\Message\ResponseInterface'.
 
-#### `Zfegg\PsrMvc\Preparer\SerializationPreparer`
+#### `Zfegg\PsrMvc\Preparer\DefaultPreparer`
 
+默认的结果预处理器
 
 ```php
 class ExampleResponseController {
@@ -241,7 +220,7 @@ class ExampleResponseController {
     }
 
     /*
-     *  If result is string, then convert to `HtmlResponse` object.
+     *  结果类型是字符串, 默认返回 `HtmlResponse` 对象
      *  `new HtmlResponse($result)`
      */
     #[HttpPost('/hello-string')]
@@ -250,7 +229,7 @@ class ExampleResponseController {
     }
     
     /*
-     *  If result is array, default convert to `JsonResponse` object.
+     *  默认返回 `JsonResponse` 对象
      *  `new JsonResponse($result)`
      */
     #[HttpPost('/hello-array')]
@@ -260,9 +239,9 @@ class ExampleResponseController {
 }
 ```
 
-#### `Zfegg\PsrMvc\Preparer\SerializationPreparer` (Recommend)
+#### `Zfegg\PsrMvc\Preparer\SerializationPreparer` (推荐使用)
 
-Serialize by `symfony/serializer` and write the response body.
+将使用 `symfony/serializer` 序列化结果。
 
 ```php
 class ExampleResponseController {
@@ -271,8 +250,8 @@ class ExampleResponseController {
     }
 
     /*
-     * Serialize by `symfony/serializer`.
-     * The serialization format is parsed by `FormatMatcher`.
+     * 使用 `symfony/serializer` 组件对结果序列化处理.
+     * `FormatMatcher` 可匹配相应的序列化格式 `$format`.
      * <code>
      * $result = $serializer->serialize($result, $format);
      * $response->withBody($result);
@@ -285,18 +264,17 @@ class ExampleResponseController {
 }
 ```
 
+支持的预处理器选项:
 
-Preparer options:
+| 键 | 说明 |
+|---|-----|
+| status | 响应状态码 |
+| headers | 响应头 | 
+| `<more>` | `$serializer->serialize` context 变量 |
 
-| Key | description |
-|---|--------------|
-| status | Http response code. |
-| headers | Http response headers. | 
-| `<more>` | `$serializer->serialize` context variables. |
+#### `#[PrepareResult]` 属性
 
-#### The `PrepareResult` attribute
-
-Using `#[PrepareResult]` attribute to select a preparer and pass the context.
+使用`#[PrepareResult]` 选择需要的预处理器和传递预处理参数
 
 ```php
 use \Zfegg\PsrMvc\Preparer\SerializationPreparer;
@@ -318,57 +296,9 @@ class ExampleResponseController {
 }
 ```
 
+### 手动注册路由
 
-### Example for Mezzio :
-
-```php
-// Class file HelloController.php
-
-class HelloController {
-  public function say(
-    \Psr\Http\Message\ServerRequestInterface $request, // Inject request param
-    string $name, // Auto inject param from $request->getAttribute('name').
-    Foo $foo     // Auto inject param from container.
-  ) {
-    return new TextResponse('hello ' . $name);
-  }
-}
-```
-
-```php
-
-// File config/config.php
-// Add ConfigProvider 
-
-new ConfigAggregator([
-  Zfegg\PsrMvc\ConfigProvider::class,
-]);
-```
-
-```php
-
-// config/autoload/global.php
-// Add demo class factories
-
-use Zfegg\PsrMvc\Container\HandlerFactory;
-
-return [
-    'dependencies' => [
-        'invokables' => [
-            Hello::class,
-        ],
-        'factories' => [
-            Hello::class . '@say' => HandlerFactory::class, 
-        ],
-    ]
-];
-```
-
-
-### Register route without attribute.
-
-Using `CallableHandlerAbstractFactory` register route.
-
+使用 `CallableHandlerAbstractFactory` 手动注册路由
 
 ```php
 
@@ -385,40 +315,6 @@ return [
     ]
 ];
 
+// 手动注册
 $app->get('/foo-method', ExampleController::class . '@fooMethod')
-```
-
-Register abstract factory in `laminas/laminias-servicemanager`.
-
-
-```php
-
-// config/autoload/global.php
-// Add demo class factories
-
-use Zfegg\PsrMvc\Container\CallbackHandlerAbstractFactory;
-
-return [
-    'dependencies' => [
-        'invokables' => [
-            Hello::class,
-        ],
-        'abstract_factories' => [
-            CallbackHandlerAbstractFactory::class, 
-        ],
-    ]
-];
-
-class User {
-  function create() {}
-  function getList() {}
-  function get($id) {}
-  function delete($id) {}
-}
-
-// CallableHandlerDecorator abstract factory.
-$container->get('User@create');
-$container->get('User@getList');
-$container->get('User@get');
-$container->get('User@delete');
 ```
