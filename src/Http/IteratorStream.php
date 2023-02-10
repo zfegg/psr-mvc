@@ -181,7 +181,7 @@ class IteratorStream implements StreamInterface
      */
     public function read($length)
     {
-        $buf = $this->iterator->current();
+        $buf = (string)$this->iterator->current();
         $this->iterator->next();
         ++$this->position;
 
