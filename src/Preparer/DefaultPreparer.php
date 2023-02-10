@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Zfegg\PsrMvc\Preparer;
 
 use Laminas\Diactoros\Response\HtmlResponse;

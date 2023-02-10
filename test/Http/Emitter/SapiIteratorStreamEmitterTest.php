@@ -9,7 +9,6 @@ use Zfegg\PsrMvc\Http\Emitter\SapiIteratorStreamEmitter;
 use PHPUnit\Framework\TestCase;
 use Zfegg\PsrMvc\Http\IteratorStream;
 use function ob_start;
-use function ob_end_clean;
 
 class SapiIteratorStreamEmitterTest extends TestCase
 {
@@ -51,4 +50,3 @@ class SapiIteratorStreamEmitterTest extends TestCase
         $this->emitter->emit($response);
     }
 }
-
