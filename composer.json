@@ -44,7 +44,10 @@
     "autoload-dev": {
         "psr-4": {
             "ZfeggTest\\PsrMvc\\" : "test/"
-        }
+        },
+        "files": [
+            "test/TestAsset/HeadersSent.php"
+        ]
     },
     "scripts": {
         "cs-check": "phpcs",
