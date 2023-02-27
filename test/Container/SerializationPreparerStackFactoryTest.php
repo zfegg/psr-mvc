@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Container;
 
 use Zfegg\PsrMvc\Container\SerializationPreparerStackFactory;
-use PHPUnit\Framework\TestCase;
 use Zfegg\PsrMvc\Preparer\PreparerStack;
-use Zfegg\PsrMvc\Preparer\ResultPreparableInterface;
 
 use Zfegg\PsrMvc\Preparer\SerializationPreparer;
 use ZfeggTest\PsrMvc\AbstractTestCase;
+
 class SerializationPreparerStackFactoryTest extends AbstractTestCase
 {
 
