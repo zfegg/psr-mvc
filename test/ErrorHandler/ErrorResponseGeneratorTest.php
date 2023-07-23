@@ -6,9 +6,9 @@ namespace ZfeggTest\PsrMvc\ErrorHandler;
 
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequestFactory;
+use Mezzio\Middleware\ErrorResponseGenerator;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Zfegg\PsrMvc\ErrorHandler\ErrorResponseGenerator;
 use Zfegg\PsrMvc\Exception\NotFoundHttpException;
 use ZfeggTest\PsrMvc\AbstractTestCase;
 use function PHPUnit\Framework\assertArrayHasKey;
@@ -25,7 +25,7 @@ class ErrorResponseGeneratorTest extends AbstractTestCase
         return [
             [
                 $notFoundEx,
-                $request->withHeader('X_REQUESTED_WITH', 'xmlhttprequest'),
+                $request->withHeader('x-requested-with', 'XMLHttpRequest'),
                 404,
             ],
             [
@@ -41,7 +41,7 @@ class ErrorResponseGeneratorTest extends AbstractTestCase
             ],
             [
                 $notFoundEx,
-                $request->withHeader('X_REQUESTED_WITH', 'xmlhttprequest'),
+                $request->withHeader('x-requested-with', 'XMLHttpRequest'),
                 404,
                 null,
                 true,

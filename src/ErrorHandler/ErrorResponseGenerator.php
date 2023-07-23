@@ -24,7 +24,7 @@ class ErrorResponseGenerator
     private function isAjax(ServerRequestInterface $request): bool
     {
         return str_starts_with($request->getAttribute('format', ''), 'json') ||
-            strtolower($request->getHeaderLine('X_REQUESTED_WITH')) == 'xmlhttprequest';
+            strtolower($request->getHeaderLine('x-requested-with')) == 'xmlhttprequest';
     }
 
     public function __invoke(
