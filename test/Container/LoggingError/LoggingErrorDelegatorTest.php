@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace ZfeggTest\PsrMvc\Container\LoggingError;
 
 use Laminas\Stratigility\Middleware\ErrorHandler;
