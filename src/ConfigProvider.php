@@ -7,6 +7,7 @@ namespace Zfegg\PsrMvc;
 use Mezzio\Middleware\ErrorResponseGenerator;
 use Mezzio\Router\RouteCollector;
 use Zfegg\PsrMvc\Container\RouteCollectorInjectionDelegator;
+use Zfegg\PsrMvc\ErrorHandler\ErrorResponseGenerator;
 use Zfegg\PsrMvc\Middleware\ContentTypeMiddleware;
 use Zfegg\PsrMvc\ParamResolver\ParamResolverManager;
 use Zfegg\PsrMvc\Preparer\CommonPreparer;
