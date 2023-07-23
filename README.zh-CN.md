@@ -318,3 +318,55 @@ return [
 // 手动注册
 $app->get('/foo-method', ExampleController::class . '@fooMethod')
 ```
+
+
+
+### mezzio 错误处理 
+
+丰富错误处理程序 `ErrorResponseGenerator`.
+
+#### Response to json format
+
+在处理器中抛出异常
+
+```php
+use \Zfegg\PsrMvc\Exception\AccessDeniedHttpException;
+use \Zfegg\PsrMvc\Attribute\HttpGet;
+
+class FooController {
+  #[HttpGet("/api/foo")]
+  public function fooAction() {
+    throw new AccessDeniedHttpException("Foo", code: 100);
+  }
+}
+
+```
+
+如果请求是 ajax，将响应JSON结果
+
+```
+HTTP/1.1 403 Forbidden
+
+{"message":"Foo","code":100}
+```
+
+#### 日志记录异常
+
+当错误发生时，您可能希望侦听它们，以便提供日志记录等功能。
+参见： https://docs.mezzio.dev/mezzio/v3/features/error-handling/#listening-for-errors
+
+
+```php
+use Laminas\Stratigility\Middleware\ErrorHandler;
+use Zfegg\PsrMvc\Container\LoggingError\LoggingErrorDelegator;
+
+return [
+    'dependencies' => [
+        'delegators' => [
+            ErrorHandler::class => [
+                LoggingErrorDelegator::class,
+            ],
+        ],
+    ],
+];
+```
