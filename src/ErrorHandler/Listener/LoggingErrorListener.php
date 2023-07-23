@@ -13,7 +13,7 @@ final class LoggingErrorListener
 
     public function __construct(
         private LoggerInterface $logger,
-        private string $message = '%s "%s %s": <<<%s<<<',
+        private string $message = '%d "%s %s": <<<%s<<<',
         private bool $onlyServerError = true
     ) {
     }
@@ -34,12 +34,9 @@ final class LoggingErrorListener
                 $response->getStatusCode(),
                 $request->getMethod(),
                 (string)$request->getUri(),
-                $error
+                $error->getMessage()
             ),
             [
-                'status' => $response->getStatusCode(),
-                'method' => $request->getMethod(),
-                'uri'    => (string)$request->getUri(),
                 'error'  => $error,
             ]
         );
