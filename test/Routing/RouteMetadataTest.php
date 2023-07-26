@@ -14,10 +14,13 @@ class RouteMetadataTest extends AbstractTestCase
 
     public function testGetRoutes(): void
     {
+        $excludes = [__DIR__ . '/../Example/Post.php'];
         $routeMetadata = $this->container->get(RouteMetadata::class);
         $routeMetadata->addGroup('foo', ['prefix' => '/foo']);
-        $routeMetadata->addExcludePaths([__DIR__ . '/../Example/Post.php']);
+        $routeMetadata->addExcludePaths($excludes);
         $routeMetadata->setFileExtension('Controller.php');
+
+        $this->assertEquals($excludes, $routeMetadata->getExcludePaths());
         $this->assertCount(1, $routeMetadata->getPaths());
         $this->assertEquals('Controller.php', $routeMetadata->getFileExtension());
         $classes = $routeMetadata->getAllClassNames();
