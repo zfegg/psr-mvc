@@ -75,7 +75,6 @@ class ErrorResponseGenerator
                 $e->getTrace()
             ),
         ] : [
-            'code' => $e->getCode(),
             'message' => $e instanceof HttpExceptionInterface ? $e->getMessage() : 'Server Error',
         ];
     }
