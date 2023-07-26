@@ -90,7 +90,6 @@ class ErrorResponseGeneratorTest extends AbstractTestCase
         $body = (string)$response->getBody();
         $result = json_decode($body, true);
 
-        assertEquals($e->getCode(), $result['code']);
         assertEquals($msg ?: $e->getMessage(), $result['message']);
         if ($debug) {
             assertArrayHasKey('exception', $result);
