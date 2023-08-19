@@ -36,4 +36,20 @@ class RouteMetadataTest extends AbstractTestCase
             $this->assertEquals(MvcExampleController::class, $className);
         }
     }
+
+    public function testGetRoutesFromCache(): void
+    {
+        $config = $this->container->get('config');
+
+        $file = tmpfile();
+        $path = stream_get_meta_data($file)['uri'];
+        $config[RouteMetadata::class]['cacheFile'] = $path;
+        $routeMetadata = $this->container->get(RouteMetadata::class);
+        $metas = $routeMetadata->getRoutes();
+        $this->assertCount(8, $metas);
+
+        // From cache
+        $metas = $routeMetadata->getRoutes();
+        $this->assertCount(8, $metas);
+    }
 }
