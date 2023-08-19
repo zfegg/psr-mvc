@@ -422,3 +422,54 @@ $container->get('User@getList');
 $container->get('User@get');
 $container->get('User@delete');
 ```
+
+
+### ErrorHandler for mezzio
+
+Rich error handling, 
+
+#### Response to json format
+
+Throw exception in handler.
+
+```php
+use \Zfegg\PsrMvc\Exception\AccessDeniedHttpException;
+use \Zfegg\PsrMvc\Attribute\HttpGet;
+
+class FooController {
+  #[HttpGet("/api/foo")]
+  public function fooAction() {
+    throw new AccessDeniedHttpException("Foo", code: 100);
+  }
+}
+
+```
+
+When request is ajax will response to json result:
+
+```
+HTTP/1.1 403 Forbidden
+
+{"message":"Foo","code":100}
+```
+
+#### logging errors
+
+When errors occur, you may want to listen for them in order to provide features such as logging. 
+See https://docs.mezzio.dev/mezzio/v3/features/error-handling/#listening-for-errors
+
+
+```php
+use Laminas\Stratigility\Middleware\ErrorHandler;
+use Zfegg\PsrMvc\Container\LoggingError\LoggingErrorDelegator;
+
+return [
+    'dependencies' => [
+        'delegators' => [
+            ErrorHandler::class => [
+                LoggingErrorDelegator::class,
+            ],
+        ],
+    ],
+];
+```
