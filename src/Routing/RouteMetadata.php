@@ -50,6 +50,13 @@ class RouteMetadata
 
     private ParameterConverterInterface $parameterConverter;
 
+    private ?string $cacheFile;
+
+    public const CACHE_TEMPLATE = <<<EOT
+        <?php
+        return %s;
+        EOT;
+
     /**
      * @param string[] $paths
      * @param string[] $excludePaths
@@ -61,12 +68,14 @@ class RouteMetadata
         string $fileExtension = 'Controller.php',
         array $groups = [],
         ?ParameterConverterInterface $parameterConverter = null,
+        ?string $cacheFile = null,
     ) {
         $this->addPaths($paths);
         $this->addExcludePaths($excludePaths);
         $this->fileExtension = $fileExtension;
         $this->parameterConverter = $parameterConverter ?? new SlugifyParameterConverter();
         $this->groups = $groups;
+        $this->cacheFile = $cacheFile;
     }
 
     public function addGroup(string $name, array $group): void
@@ -202,6 +211,10 @@ class RouteMetadata
      */
     public function getRoutes(): array
     {
+        if ($cachedRoutes = $this->loadCachedRoutes()) {
+            return $cachedRoutes;
+        }
+
         $classes = $this->getAllClassNames();
         $routes = [];
 
@@ -256,6 +269,8 @@ class RouteMetadata
             }
         }
 
+        $this->cacheRoutes($routes);
+
         return $routes;
     }
 
@@ -292,5 +307,51 @@ class RouteMetadata
         $route->path = strtr($route->path, $replacePairs);
 
         return $route;
+    }
+
+
+    /**
+     * Load routes from cache
+     *
+     */
+    private function loadCachedRoutes(): ?array
+    {
+        if (! $this->cacheFile) {
+            return null;
+        }
+        set_error_handler(static function (): void {
+        }, E_WARNING); // suppress php warnings
+        $routes = include $this->cacheFile;
+        restore_error_handler();
+
+        // Cache file does not exist
+        if (! is_array($routes)) {
+            return null;
+        }
+
+        foreach ($routes as &$route) {
+            $route[0] = new Route(...$route[0]);
+        }
+
+        return $routes;
+    }
+
+    /**
+     * Save routes to cache
+     */
+    private function cacheRoutes(array $routes): void
+    {
+        if (! $this->cacheFile) {
+            return ;
+        }
+
+        foreach ($routes as &$route) {
+            $route[0] = get_object_vars($route[0]);
+        }
+
+        file_put_contents(
+            $this->cacheFile,
+            sprintf(self::CACHE_TEMPLATE, var_export($routes, true))
+        );
     }
 }

@@ -76,9 +76,7 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                         ]
                     ],
                     RouteMetadata::class => [
-                        'paths' => [
-                            __DIR__ . '/Example'
-                        ],
+                        'paths' => glob(dirname(__DIR__) . '/*/Example'),
                         'groups' => [
                             'test' => [
                                 'prefix' => '/api',
@@ -87,7 +85,7 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                                 ],
                                 'name' => 'api.test.'
                             ]
-                        ]
+                        ],
                     ]
                 ];
             })
@@ -95,7 +93,7 @@ abstract class AbstractTestCase extends AbstractActionTestCase
 
         $aggregator = new ConfigAggregator($providers);
         $config = $aggregator->getMergedConfig();
-        $this->container->setService('config', $config);
+        $this->container->setService('config', new \ArrayObject($config));
         $this->container->configure($config['dependencies']);
         $this->container->addDelegator(
             Application::class,
