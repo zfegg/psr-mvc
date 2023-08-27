@@ -46,6 +46,7 @@ return [
     // 添加扫描控制器目录
     RouteMetadata::class => [
         'paths' => ['path/to/Controller'],
+        'cacheFile' => 'data/cache/route-meta.php', // 缓存注解路由配置
     ]
 ];
 

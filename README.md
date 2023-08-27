@@ -45,6 +45,7 @@ return [
     // Add scan controllers paths
     \Zfegg\PsrMvc\Routing\RouteMetadata::class => [
         'paths' => ['path/to/Controller'],
+        'cacheFile' => 'data/cache/route-meta.php', // For cache routes
     ]
 ];
 
