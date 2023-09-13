@@ -11,6 +11,14 @@ use Zfegg\PsrMvc\Exception\InvalidArgumentException;
 
 class PreparerStack extends SplStack implements ResultPreparableInterface
 {
+
+    public function __construct(iterable $preparers = [])
+    {
+        foreach ($preparers as $preparer) {
+            $this->push($preparer);
+        }
+    }
+
     public function prepare(ServerRequestInterface $request, mixed $result, array $options = []): ResponseInterface
     {
         /** @var ResultPreparableInterface $preparer */

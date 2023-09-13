@@ -7,7 +7,7 @@ namespace ZfeggTest\PsrMvc;
 use Laminas\ServiceManager\ServiceManager;
 use Zfegg\PsrMvc\ConfigProvider;
 use PHPUnit\Framework\TestCase;
-use Zfegg\PsrMvc\CallbackHandlerFactory;
+use Zfegg\PsrMvc\Preparer\ResultPreparableInterface;
 
 class ConfigProviderTest extends TestCase
 {
@@ -16,6 +16,6 @@ class ConfigProviderTest extends TestCase
     {
         $container = new ServiceManager((new ConfigProvider())()['dependencies']);
 
-        $this->assertTrue($container->has(CallbackHandlerFactory::class));
+        $this->assertTrue($container->has(ResultPreparableInterface::class));
     }
 }

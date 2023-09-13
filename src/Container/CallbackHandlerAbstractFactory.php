@@ -15,6 +15,9 @@ class CallbackHandlerAbstractFactory implements AbstractFactoryInterface
      */
     public function canCreate(ContainerInterface $container, $requestedName)
     {
+        if ($requestedName === CallbackHandlerFactory::class) {
+            return false;
+        }
         return $container->get(CallbackHandlerFactory::class)->exists($requestedName);
     }
 
