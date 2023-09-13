@@ -25,7 +25,7 @@ class CallbackHandlerAbstractFactory implements AbstractFactoryInterface
         } catch (ServiceNotFoundException $e) {
             return false;
         }
-      }
+    }
 
     /**
      * @inheritDoc
