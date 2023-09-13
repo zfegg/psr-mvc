@@ -21,6 +21,7 @@
     ],
     "require-dev": {
         "laminas/laminas-config-aggregator": "^1.7",
+        "laminas/laminas-di": "^3.9",
         "laminas/laminas-diactoros": "^2.5",
         "laminas/laminas-servicemanager": "^3.6",
         "mezzio/mezzio": "^3.6",

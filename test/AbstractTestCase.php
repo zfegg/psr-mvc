@@ -6,7 +6,6 @@ namespace ZfeggTest\PsrMvc;
 
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\Diactoros\ResponseFactory;
-use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
@@ -48,6 +47,7 @@ abstract class AbstractTestCase extends AbstractActionTestCase
             \Mezzio\Router\ConfigProvider::class,
             \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
             ConfigProvider::class,
+            \Laminas\Di\ConfigProvider::class,
             (function () {
                 return [
                     'dependencies' => [
@@ -73,20 +73,26 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                         ],
                         'aliases' => [
                             SerializerInterface::class => Serializer::class,
-                        ]
-                    ],
-                    RouteMetadata::class => [
-                        'paths' => glob(dirname(__DIR__) . '/*/Example'),
-                        'groups' => [
-                            'test' => [
-                                'prefix' => '/api',
-                                'middlewares' => [
-                                    'middleware1',
-                                ],
-                                'name' => 'api.test.'
+                        ],
+                        'auto' => [
+                            'types' => [
+                                RouteMetadata::class => [
+                                    'parameters' => [
+                                        'paths' => glob(dirname(__DIR__) . '/*/Example'),
+                                        'groups' => [
+                                            'test' => [
+                                                'prefix' => '/api',
+                                                'middlewares' => [
+                                                    'middleware1',
+                                                ],
+                                                'name' => 'api.test.'
+                                            ]
+                                        ],
+                                    ]
+                                ]
                             ]
                         ],
-                    ]
+                    ],
                 ];
             })
         ];
@@ -94,6 +100,7 @@ abstract class AbstractTestCase extends AbstractActionTestCase
         $aggregator = new ConfigAggregator($providers);
         $config = $aggregator->getMergedConfig();
         $this->container->setService('config', new \ArrayObject($config));
+        $this->container->setService(ContainerInterface::class, $this->container);
         $this->container->configure($config['dependencies']);
         $this->container->addDelegator(
             Application::class,
@@ -108,7 +115,6 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                 return $app;
             }
         );
-        $this->container->addAbstractFactory(ReflectionBasedAbstractFactory::class);
 
         return $this->container;
     }

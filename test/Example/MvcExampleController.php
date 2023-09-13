@@ -29,7 +29,7 @@ use Zfegg\PsrMvc\Preparer\SerializationPreparer;
 use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
 
 #[RouteGroup('test')]
-#[Route('/[controller]/[action]')]
+#[Route('/[controller]/[action]', name: '[controller].[action]')]
 class MvcExampleController
 {
 

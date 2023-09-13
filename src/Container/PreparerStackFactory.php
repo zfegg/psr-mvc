@@ -15,10 +15,9 @@ class PreparerStackFactory
 
     public function __invoke(ContainerInterface $container): ResultPreparableInterface
     {
-        $preparer = new PreparerStack();
-        $preparer->push($container->get(DefaultPreparer::class));
-        $preparer->push($container->get(CommonPreparer::class));
-
-        return $preparer;
+        return new PreparerStack([
+            $container->get(DefaultPreparer::class),
+            $container->get(CommonPreparer::class),
+        ]);
     }
 }
