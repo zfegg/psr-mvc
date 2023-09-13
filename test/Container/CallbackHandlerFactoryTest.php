@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace ZfeggTest\PsrMvc\Factory;
+namespace ZfeggTest\PsrMvc\Container;
 
 use Zfegg\PsrMvc\CallbackHandler;
 use Zfegg\PsrMvc\Container\HandlerFactory;

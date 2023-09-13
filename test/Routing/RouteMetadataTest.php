@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ZfeggTest\PsrMvc\Routing;
 
+use Laminas\Di\ConfigInterface;
 use Zfegg\PsrMvc\Attribute\Route;
 use Zfegg\PsrMvc\Routing\RouteMetadata;
 use ZfeggTest\PsrMvc\Example\MvcExampleController;
@@ -42,11 +43,13 @@ class RouteMetadataTest extends AbstractTestCase
 
     public function testGetRoutesFromCache(): void
     {
-        $config = $this->container->get('config');
-
         $file = tmpfile();
         $path = stream_get_meta_data($file)['uri'];
-        $config[RouteMetadata::class]['cacheFile'] = $path;
+        $config = $this->container->get(ConfigInterface::class);
+        $config->setParameters(
+            RouteMetadata::class,
+            $config->getParameters(RouteMetadata::class) + ['cacheFile' => $path]
+        );
         $routeMetadata = $this->container->get(RouteMetadata::class);
         $metas = $routeMetadata->getRoutes();
         $this->assertCount(8, $metas);
