@@ -37,6 +37,7 @@ class RouteMetadataTest extends AbstractTestCase
         foreach ($metas as [$route, [$className, $method]]) {
             $this->assertInstanceOf(Route::class, $route);
             $this->assertStringStartsWith('/api/mvc-example/', $route->path);
+            $this->assertStringStartsWith('api.test.', $route->name);
             $this->assertEquals(MvcExampleController::class, $className);
         }
     }

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Zfegg\PsrMvc\Container;
 
 use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 use Zfegg\PsrMvc\CallbackHandlerFactory;
 
@@ -19,8 +20,12 @@ class CallbackHandlerAbstractFactory implements AbstractFactoryInterface
         if ($requestedName === CallbackHandlerFactory::class) {
             return false;
         }
-        return $container->get(CallbackHandlerFactory::class)->exists($requestedName);
-    }
+        try {
+            return $container->get(CallbackHandlerFactory::class)->exists($requestedName);
+        } catch (ServiceNotFoundException $e) {
+            return false;
+        }
+      }
 
     /**
      * @inheritDoc
