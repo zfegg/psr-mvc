@@ -24,6 +24,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Zfegg\ExpressiveTest\AbstractActionTestCase;
 use Zfegg\ExpressiveTest\PassMiddleware;
 use Zfegg\PsrMvc\ConfigProvider;
+use Zfegg\PsrMvc\Routing\RouteMetadata;
 
 abstract class AbstractTestCase extends AbstractActionTestCase
 {
@@ -73,7 +74,24 @@ abstract class AbstractTestCase extends AbstractActionTestCase
                         'aliases' => [
                             SerializerInterface::class => Serializer::class,
                         ],
-
+                        'auto' => [
+                            'types' => [
+                                RouteMetadata::class => [
+                                    'parameters' => [
+                                        'paths' => glob(dirname(__DIR__) . '/*/Example'),
+                                        'groups' => [
+                                            'test' => [
+                                                'prefix' => '/api',
+                                                'middlewares' => [
+                                                    'middleware1',
+                                                ],
+                                                'name' => 'api.test.'
+                                            ]
+                                        ],
+                                    ]
+                                ]
+                            ]
+                        ],
                     ],
                 ];
             })
