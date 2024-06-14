@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Zfegg\PsrMvc\ParamResolver;
 
 use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\AbstractSingleInstancePluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,7 +27,11 @@ use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
  */
 class ParamResolverManager extends AbstractPluginManager
 {
-    protected $instanceOf = ParamResolverInterface::class;
+
+    /**
+     * @var string
+     */
+    protected $instanceOf = ParamResolverInterface::class; // phpcs:ignore
 
     public function __construct(private ContainerInterface $container, array $config = [])
     {
