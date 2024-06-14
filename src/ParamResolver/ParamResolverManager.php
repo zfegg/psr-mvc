@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Zfegg\PsrMvc\ParamResolver;
 
 use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractSingleInstancePluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionNamedType;
@@ -26,11 +28,11 @@ use Zfegg\PsrMvc\Routing\ParameterConverterInterface;
  */
 class ParamResolverManager extends AbstractPluginManager
 {
-    /** @inheritdoc */
     protected $instanceOf = ParamResolverInterface::class;
 
-    public function __construct(ContainerInterface $container, array $config = [])
+    public function __construct(private ContainerInterface $container, array $config = [])
     {
+        parent::__construct($container, $config);
         $this->configure([
             'factories' => [
                 FromAttribute::class => static fn(ContainerInterface $container) =>
@@ -50,8 +52,6 @@ class ParamResolverManager extends AbstractPluginManager
                 FromServer::class             => static fn() => new ParamFromServer(),
             ]
         ]);
-
-        parent::__construct($container, $config);
     }
 
 
@@ -83,8 +83,8 @@ class ParamResolverManager extends AbstractPluginManager
         }
 
         $name = $parameter->getName();
-        $container = $this->creationContext;
-        $hasService = $this->creationContext->has($type);
+        $container = $this->container;
+        $hasService = $this->container->has($type);
 
         return static function (ServerRequestInterface $request) use ($name, $type, $hasService, $container) {
             $value = $request->getAttribute($type, $request->getAttribute($name));
@@ -94,5 +94,19 @@ class ParamResolverManager extends AbstractPluginManager
 
             return $value;
         };
+    }
+
+    public function validate(mixed $instance): void
+    {
+        if ($instance instanceof $this->instanceOf) {
+            return;
+        }
+
+        throw new InvalidServiceException(sprintf(
+            'Plugin manager "%s" expected an instance of type "%s", but "%s" was received',
+            static::class,
+            $this->instanceOf,
+            get_debug_type($instance)
+        ));
     }
 }

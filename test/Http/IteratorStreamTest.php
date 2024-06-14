@@ -52,7 +52,6 @@ class IteratorStreamTest extends TestCase
 
     public function testMethods(): void
     {
-        $this->assertFalse($this->stream->write(""));
         $this->assertTrue($this->stream->isSeekable());
         $this->assertTrue($this->stream->isReadable());
         $this->assertFalse($this->stream->isWritable());
@@ -61,6 +60,9 @@ class IteratorStreamTest extends TestCase
         $this->assertEquals([], $this->stream->getMetadata());
 
         $this->stream->close();
+        $this->expectException(\BadMethodCallException::class);
+
+        $this->assertFalse($this->stream->write(""));
     }
 
     public function testSeek(): void
@@ -70,8 +72,7 @@ class IteratorStreamTest extends TestCase
             "b",
             "c",
         ]));
-
-        $this->assertTrue($stream->seek(1));
+        $stream->seek(1);
         $rs = $stream->read(0);
 
         $this->assertEquals('b', $rs);
