@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc\Http;
 
+use BadMethodCallException;
 use Countable;
 use IteratorAggregate;
 use Traversable;
@@ -44,7 +45,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function __toString()
+    public function __toString(): string
     {
         $this->iterator->rewind();
 
@@ -54,7 +55,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function close()
+    public function close(): void
     {
     }
 
@@ -71,7 +72,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function getSize()
+    public function getSize(): ?int
     {
         if ($this->iterator instanceof Countable) {
             return count($this->iterator);
@@ -83,7 +84,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function tell()
+    public function tell(): int
     {
         return $this->position;
     }
@@ -91,7 +92,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function eof()
+    public function eof(): bool
     {
         if ($this->iterator instanceof Countable) {
             return ($this->position === count($this->iterator));
@@ -103,7 +104,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         return true;
     }
@@ -111,15 +112,15 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = SEEK_SET): void
     {
         if (! is_int($offset) && ! is_numeric($offset)) {
-            return false;
+            return ;
         }
         $offset = (int) $offset;
 
         if ($offset < 0) {
-            return false;
+            return ;
         }
 
         $key = $this->iterator->key();
@@ -139,23 +140,21 @@ class IteratorStream implements StreamInterface
         }
 
         $this->position = $key;
-        return true;
     }
 
     /**
      * @inheritdoc
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->iterator->rewind();
         $this->position = 0;
-        return true;
     }
 
     /**
      * @inheritdoc
      */
-    public function isWritable()
+    public function isWritable(): bool
     {
         return false;
     }
@@ -163,15 +162,15 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function write($string)
+    public function write($string): int
     {
-        return false;
+        throw new BadMethodCallException("Write method not impl.");
     }
 
     /**
      * @inheritdoc
      */
-    public function isReadable()
+    public function isReadable(): bool
     {
         return true;
     }
@@ -179,7 +178,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function read($length)
+    public function read($length): string
     {
         $buf = (string)$this->iterator->current();
         $this->iterator->next();
@@ -191,7 +190,7 @@ class IteratorStream implements StreamInterface
     /**
      * @inheritdoc
      */
-    public function getContents()
+    public function getContents(): string
     {
         $contents = '';
         while ($this->iterator->valid()) {
