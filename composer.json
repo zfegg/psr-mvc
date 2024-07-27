@@ -21,9 +21,9 @@
     ],
     "require-dev": {
         "laminas/laminas-config-aggregator": "^1.7",
-        "laminas/laminas-di": "^3.9",
+        "laminas/laminas-di": "^3.14",
         "laminas/laminas-diactoros": "^3.0",
-        "laminas/laminas-servicemanager": "^3.6 | ^4.0",
+        "laminas/laminas-servicemanager": "^3.6",
         "mezzio/mezzio": "^3.6",
         "mezzio/mezzio-fastroute": "^3.3",
         "mezzio/mezzio-router": "^3.7.0",
@@ -62,7 +62,7 @@
             "config-provider": "Zfegg\\PsrMvc\\ConfigProvider"
         },
         "branch-alias": {
-            "dev-main": "3.x-dev"
+            "dev-main": "4.x-dev"
         }
     },
     "config": {
