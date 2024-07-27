@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace Zfegg\PsrMvc\Container;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
 use Mezzio\MiddlewareFactory;
 use Mezzio\Router\RouteCollectorInterface;
+use Psr\Container\ContainerInterface;
 use Zfegg\PsrMvc\CallbackHandlerFactory;
 use Zfegg\PsrMvc\LazyCallbackHandler;
 use Zfegg\PsrMvc\Routing\RouteMetadata;
