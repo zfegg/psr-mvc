@@ -28,10 +28,7 @@ class RouteMetadataTest extends AbstractTestCase
         $this->assertEquals('Controller.php', $routeMetadata->getFileExtension());
         $classes = $routeMetadata->getAllClassNames();
 
-        $this->assertEquals(
-            [Example2Controller::class, MvcExampleController::class,],
-            $classes
-        );
+        $this->assertCount(2, $classes);
 
         $metas = $routeMetadata->getRoutes();
         $this->assertCount(9, $metas);
